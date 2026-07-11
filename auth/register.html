@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب — MZ TV</title>
+<link rel="icon" href="../icon.png" type="image/png">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .auth-wrap{
+    min-height: calc(100vh - 60px);
+    display:flex; align-items:center; justify-content:center;
+    padding: 3rem 1.5rem;
+    position:relative; overflow:hidden;
+  }
+  .auth-wrap::before{
+    content:""; position:absolute; inset:0; z-index:0;
+    background: radial-gradient(circle at 80% 20%, rgba(124,58,237,.18), transparent 45%),
+                radial-gradient(circle at 15% 80%, rgba(168,85,247,.14), transparent 50%);
+  }
+  .auth-card{
+    position:relative; z-index:1;
+    width:100%; max-width: 460px;
+    background: var(--bg-card);
+    border:1px solid var(--border);
+    padding: 2.6rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%);
+  }
+  .auth-card h1{ font-family: var(--font-display); font-size:1.9rem; margin-bottom:.4rem; }
+  .auth-card p.sub{ color: var(--text-dim); font-size:.9rem; margin-bottom:2rem; }
+  .field{ margin-bottom: 1.2rem; }
+  .field label{ display:block; font-size:.85rem; font-weight:700; margin-bottom:.5rem; color: var(--text-dim); }
+  .field input{
+    width:100%; padding:.8rem 1rem;
+    background: var(--bg-elevated); border:1px solid var(--border); color: var(--text);
+    border-radius: var(--radius);
+    transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .field input:focus{ outline:none; border-color: var(--purple-bright); box-shadow: 0 0 0 3px rgba(124,58,237,.2); }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .terms{ display:flex; align-items:flex-start; gap:.6rem; font-size:.82rem; color: var(--text-dim); margin-bottom:1.6rem; }
+  .terms a{ color: var(--purple-bright); }
+  .divider{ display:flex; align-items:center; gap:1rem; margin:1.8rem 0; color: var(--text-faint); font-size:.8rem; }
+  .divider::before, .divider::after{ content:""; flex:1; height:1px; background: var(--border); }
+  .switch{ text-align:center; margin-top:1.6rem; font-size:.9rem; color: var(--text-dim); }
+  .switch a{ color: var(--purple-bright); font-weight:700; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="../index.html" class="brand">
+      <span class="brand__mark">MZ</span>
+      <span>MZ <span class="brand__tv">TV</span></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="../index.html">الرئيسية</a></li>
+      <li><a href="../matches.html">مواعيد المباريات</a></li>
+      <li><a href="../channels/sports.html">القنوات الرياضية</a></li>
+      <li><a href="../channels/movies.html">أفلام ومسلسلات</a></li>
+    </ul>
+    <div class="nav__auth">
+      <a href="login.html" class="btn btn--ghost">تسجيل الدخول</a>
+      <a href="register.html" class="btn btn--primary">إنشاء حساب</a>
+    </div>
+    <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
+  </nav>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card reveal-scale is-visible">
+    <span class="eyebrow" style="margin-bottom:1.2rem;">◆ انضم إلينا</span>
+    <h1>إنشاء حساب جديد</h1>
+    <p class="sub">أنشئ حسابك المجاني وابدأ بمتابعة فرقك ومبارياتك المفضلة.</p>
+
+    <form onsubmit="return false;">
+      <div class="field">
+        <label for="name">الاسم الكامل</label>
+        <input type="text" id="name" placeholder="اسمك الكامل" required>
+      </div>
+      <div class="field">
+        <label for="email">البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="example@email.com" required>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="password">كلمة المرور</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+        <div class="field">
+          <label for="password2">تأكيد كلمة المرور</label>
+          <input type="password" id="password2" placeholder="••••••••" required>
+        </div>
+      </div>
+      <label class="terms">
+        <input type="checkbox" style="margin-top:.2rem; width:auto;" required>
+        <span>أوافق على <a href="#">شروط الاستخدام</a> و<a href="#">سياسة الخصوصية</a></span>
+      </label>
+      <button type="submit" class="btn btn--primary btn--block">إنشاء الحساب</button>
+    </form>
+
+    <div class="divider">أو</div>
+
+    <button class="btn btn--ghost btn--block">التسجيل عبر جوجل</button>
+
+    <p class="switch">لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

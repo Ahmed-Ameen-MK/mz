@@ -64,6 +64,15 @@
       <a href="login.html" class="btn btn--ghost">تسجيل الدخول</a>
       <a href="register.html" class="btn btn--primary">إنشاء حساب</a>
     </div>
+    <div class="nav__account" id="navAccount">
+      <button type="button" class="nav__account-btn" id="navAccountBtn">
+        <span class="nav__account-avatar" id="navAccountAvatar">?</span>
+        <span class="nav__account-name" id="navAccountName">الحساب</span>
+      </button>
+      <div class="nav__account-menu">
+        <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
+      </div>
+    </div>
     <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
   </nav>
 </header>
@@ -74,7 +83,7 @@
     <h1>تسجيل الدخول</h1>
     <p class="sub">سجّل الدخول لمتابعة فرقك المفضلة وحفظ إعداداتك.</p>
 
-    <form onsubmit="return false;">
+    <form id="loginForm">
       <div class="field">
         <label for="email">البريد الإلكتروني</label>
         <input type="email" id="email" placeholder="example@email.com" required>
@@ -87,17 +96,55 @@
         <label class="check"><input type="checkbox" style="width:auto;"> تذكرني</label>
         <a href="#">نسيت كلمة المرور؟</a>
       </div>
-      <button type="submit" class="btn btn--primary btn--block">تسجيل الدخول</button>
+      <p class="form-msg" id="loginMsg"></p>
+      <button type="submit" class="btn btn--primary btn--block" id="loginSubmitBtn">تسجيل الدخول</button>
     </form>
 
     <div class="divider">أو</div>
 
-    <button class="btn btn--ghost btn--block">المتابعة عبر جوجل</button>
+    <button class="btn btn--ghost btn--block" type="button" id="googleLoginBtn">المتابعة عبر جوجل</button>
 
     <p class="switch">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/auth.js"></script>
 <script src="../js/main.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('loginMsg');
+    const btn = document.getElementById('loginSubmitBtn');
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    msg.textContent = '';
+    msg.className = 'form-msg';
+    btn.disabled = true;
+    btn.textContent = 'جارِ الدخول...';
+
+    try {
+      await mzAuth.login(email, password);
+      window.location.href = '../index.html';
+    } catch (err) {
+      msg.textContent = mzFriendlyAuthError(err);
+      msg.className = 'form-msg form-msg--error';
+      btn.disabled = false;
+      btn.textContent = 'تسجيل الدخول';
+    }
+  });
+
+  document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+    const msg = document.getElementById('loginMsg');
+    try {
+      await mzAuth.loginWithGoogle();
+    } catch (err) {
+      msg.textContent = 'تعذّر بدء تسجيل الدخول عبر جوجل';
+      msg.className = 'form-msg form-msg--error';
+    }
+  });
+</script>
 </body>
 </html>

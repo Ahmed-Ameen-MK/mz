@@ -372,3 +372,104 @@ body::before{
 a:focus-visible, button:focus-visible, input:focus-visible{
   outline: 2px solid var(--purple-bright); outline-offset: 2px;
 }
+
+/* =================== HERO BACKGROUND CAROUSEL =================== */
+.hero__bg-carousel{ position:absolute; inset:0; z-index:0; }
+.hero__bg{
+  position:absolute; inset:0;
+  background-size: cover; background-position:center;
+  opacity:0; transition: opacity 1.8s var(--ease);
+}
+.hero__bg.is-active{ opacity:1; }
+
+/* dark + directional scrim so the heading/paragraph stay readable
+   over any of the three background photos (text sits on the right
+   in RTL, so it's darkest there and fades out toward the left) */
+.hero__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(8,8,11,.5) 0%, rgba(8,8,11,.88) 72%, var(--bg) 100%),
+    linear-gradient(to left, rgba(8,8,11,.82) 0%, rgba(8,8,11,.5) 38%, transparent 68%);
+}
+.hero__orb, .hero__scrim{ z-index:1; }
+.hero__inner{ z-index:2; }
+
+/* purple flicker toward the top-left, layered on top of the existing float */
+@keyframes purple-flicker{
+  0%,100%{ opacity:.32; }
+  12%{ opacity:.6; }
+  24%{ opacity:.3; }
+  38%{ opacity:.68; }
+  52%{ opacity:.4; }
+  68%{ opacity:.72; }
+  84%{ opacity:.34; }
+}
+.hero__orb--1{
+  animation: float-orb 9s ease-in-out infinite, purple-flicker 3.2s ease-in-out infinite;
+}
+
+/* =================== TODAY'S MATCHES — BACKGROUND CAROUSEL =================== */
+.matches-today{ position:relative; overflow:hidden; }
+.matches-bg{ position:absolute; inset:0; z-index:0; }
+.matches-bg__layer{
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  opacity:0; transition: opacity 1.6s var(--ease);
+}
+.matches-bg__layer.is-active{ opacity:.32; }
+.matches-scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background: linear-gradient(180deg, rgba(18,16,22,.82), rgba(18,16,22,.94));
+}
+.matches-today > .wrap{ position:relative; z-index:2; }
+
+/* =================== MATCH CARDS (live API data) =================== */
+.match-card__teams{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.75rem; margin: .9rem 0 .6rem;
+}
+.match-card__team{ display:flex; flex-direction:column; align-items:center; gap:.5rem; flex:1; text-align:center; }
+.match-card__team img{ width:40px; height:40px; object-fit:contain; }
+.match-card__team span{ font-size:.8rem; color: var(--text-dim); }
+.match-card__score{
+  font-family: var(--font-data); font-weight:900; font-size:1.1rem;
+  color: var(--purple-glow); white-space:nowrap; padding:0 .4rem;
+}
+.match-card__meta{ color: var(--text-faint); font-size:.78rem; margin-top:.4rem; }
+.matches__loading{ color: var(--text-dim); grid-column: 1 / -1; text-align:center; padding: 2rem 0; }
+
+/* =================== NAV ACCOUNT (logged-in state) =================== */
+.nav__account{ display:none; position:relative; }
+.nav__account.is-active{ display:flex; align-items:center; }
+.nav__account-btn{
+  display:flex; align-items:center; gap:.6rem;
+  background:transparent; border:1px solid var(--border); color: var(--text);
+  padding:.35rem .9rem .35rem .35rem; cursor:pointer;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  transition: border-color .25s var(--ease);
+}
+.nav__account-btn:hover{ border-color: var(--purple-bright); }
+.nav__account-avatar{
+  width:30px; height:30px; border-radius:50%; flex-shrink:0;
+  background: linear-gradient(135deg, var(--purple-bright), var(--purple-deep));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.85rem; color:#fff;
+}
+.nav__account-name{
+  font-weight:700; font-size:.88rem; max-width:140px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.nav__account-menu{
+  position:absolute; top:calc(100% + 8px); right:0;
+  background: var(--bg-elevated); border:1px solid var(--border);
+  min-width:170px; padding:.4rem; display:none; z-index:60;
+}
+.nav__account.is-open .nav__account-menu{ display:block; }
+.nav__account-menu a{ display:block; padding:.6rem .8rem; font-size:.87rem; color: var(--text-dim); }
+.nav__account-menu a:hover{ color: var(--text); background: var(--bg-card); }
+
+/* =================== AUTH FORM MESSAGES =================== */
+.form-msg{ font-size:.85rem; min-height:1.2em; margin-bottom: 1rem; }
+.form-msg--error{ color:#fca5a5; }
+.form-msg--success{ color:#86efac; }
+.btn[disabled]{ opacity:.6; cursor:not-allowed; transform:none !important; }

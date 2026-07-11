@@ -451,6 +451,24 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .nav__account-menu a{ display:block; padding:.6rem .8rem; font-size:.87rem; color: var(--text-dim); }
 .nav__account-menu a:hover{ color: var(--text); background: var(--bg-card); }
 
+/* =================== SATELLITE CHANNELS PROMO =================== */
+.channels-promo{
+  position:relative; overflow:hidden;
+  padding: 5.5rem 1.5rem;
+  text-align:center;
+  border-bottom: 1px solid var(--border-soft);
+}
+.channels-promo__bg{
+  position:absolute; inset:0; z-index:0;
+  background-size:cover; background-position:center;
+}
+.channels-promo__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background: linear-gradient(180deg, rgba(8,8,11,.5), rgba(8,8,11,.82));
+}
+.channels-promo .wrap{ position:relative; z-index:2; }
+.channels-promo .section__desc{ max-width:56ch; }
+
 /* =================== AUTH FORM MESSAGES =================== */
 .form-msg{ font-size:.85rem; min-height:1.2em; margin-bottom: 1rem; }
 .form-msg--error{ color:#fca5a5; }

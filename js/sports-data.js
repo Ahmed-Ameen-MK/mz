@@ -1,63 +1,62 @@
 // ===========================================================
 // MZ TV — Live sports data
-// ⚠️ TEMPORARY: calling API-Football directly from the browser
-// (no server needed to test). Swap mzFetchFixtures() to call the
-// Supabase Edge Function in supabase/functions/sports-api/ once
-// you're ready to hide the RapidAPI key server-side.
+// من TheSportsDB مباشرة — API مجاني حقيقي بيدعم النداء من
+// المتصفح مباشرة (CORS متاح)، مفيش سيرفر وسيط ولا مفتاح مدفوع.
 // ===========================================================
 
-const STATUS_LIVE = new Set(['1H', '2H', 'HT', 'ET', 'P', 'BT', 'LIVE']);
+const STATUS_LIVE_HINTS = ['1H', '2H', 'HT', 'LIVE', 'ET'];
 const STATUS_LABELS = {
   NS: 'لم تبدأ', '1H': 'الشوط الأول', HT: 'الاستراحة', '2H': 'الشوط الثاني',
-  FT: 'انتهت', AET: 'انتهت (تمديد)', PEN: 'انتهت (ترجيح)', PST: 'مؤجلة', CANC: 'ملغاة',
+  FT: 'انتهت', 'MATCH FINISHED': 'انتهت', 'NOT STARTED': 'لم تبدأ',
 };
 
-// Leagues surfaced first (Saudi Pro League, Champions League, Premier League,
-// Egyptian Premier League, La Liga, Europa League, Ligue 1, Serie A, Bundesliga)
-const PRIORITY_LEAGUES = [307, 2, 39, 233, 140, 3, 61, 135, 78];
+function mzStatusLabel(rawStatus) {
+  if (!rawStatus) return '';
+  const key = rawStatus.trim().toUpperCase();
+  return STATUS_LABELS[key] || rawStatus;
+}
 
-function mzFormatKickoff(iso) {
+function mzIsLive(rawStatus) {
+  if (!rawStatus) return false;
+  const key = rawStatus.trim().toUpperCase();
+  return STATUS_LIVE_HINTS.includes(key) || key.includes('LIVE');
+}
+
+function mzFormatKickoff(dateStr, timeStr) {
+  if (!timeStr) return '';
+  const iso = `${dateStr}T${timeStr}`;
   const d = new Date(iso);
+  if (isNaN(d.getTime())) return timeStr.slice(0, 5);
   return d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+}
+
+function mzCleanField(v) {
+  return (v && v !== 'null') ? v : null;
 }
 
 async function mzFetchFixtures() {
   const today = new Date().toISOString().slice(0, 10);
-  const res = await fetch(`https://${API_FOOTBALL_HOST}/v3/fixtures?date=${today}`, {
-    headers: {
-      'x-rapidapi-key': API_FOOTBALL_KEY,
-      'x-rapidapi-host': API_FOOTBALL_HOST,
-    },
-  });
-  if (!res.ok) throw new Error(`API-Football ${res.status}`);
+  const res = await fetch(`${SPORTSDB_BASE}/eventsday.php?d=${today}&s=Soccer`);
+  if (!res.ok) throw new Error(`TheSportsDB ${res.status}`);
   const data = await res.json();
-  if (data.errors && Object.keys(data.errors).length) {
-    throw new Error(JSON.stringify(data.errors));
-  }
+  const events = data.events || [];
 
-  const fixtures = (data.response || [])
-    .sort((a, b) => {
-      const aRank = PRIORITY_LEAGUES.indexOf(a.league.id);
-      const bRank = PRIORITY_LEAGUES.indexOf(b.league.id);
-      return (aRank === -1 ? 999 : aRank) - (bRank === -1 ? 999 : bRank);
-    })
-    .slice(0, 15)
-    .map(f => ({
-      id: f.fixture.id,
-      date: f.fixture.date,
-      status: f.fixture.status.short,
-      elapsed: f.fixture.status.elapsed,
-      league: f.league.name,
-      homeTeam: f.teams.home.name,
-      homeLogo: f.teams.home.logo,
-      awayTeam: f.teams.away.name,
-      awayLogo: f.teams.away.logo,
-      homeGoals: f.goals.home,
-      awayGoals: f.goals.away,
-    }));
-
-  return fixtures;
+  return events.slice(0, 15).map(e => ({
+    id: e.idEvent,
+    dateEvent: e.dateEvent,
+    time: mzCleanField(e.strTime),
+    status: mzCleanField(e.strStatus),
+    league: e.strLeague,
+    homeTeam: e.strHomeTeam,
+    homeLogo: mzCleanField(e.strHomeTeamBadge),
+    awayTeam: e.strAwayTeam,
+    awayLogo: mzCleanField(e.strAwayTeamBadge),
+    homeGoals: e.intHomeScore !== null && e.intHomeScore !== undefined ? Number(e.intHomeScore) : null,
+    awayGoals: e.intAwayScore !== null && e.intAwayScore !== undefined ? Number(e.intAwayScore) : null,
+  }));
 }
+
+const DEFAULT_BADGE = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="%2316131b"/><text x="50%25" y="58%25" font-size="18" fill="%23a79fb3" text-anchor="middle" font-family="sans-serif">⚽</text></svg>';
 
 function mzRenderTicker(fixtures) {
   const track = document.getElementById('tickerTrack');
@@ -69,11 +68,11 @@ function mzRenderTicker(fixtures) {
   }
 
   const items = fixtures.map(f => {
-    const isLive = STATUS_LIVE.has(f.status);
+    const isLive = mzIsLive(f.status);
     const scoreOrTime = (f.homeGoals !== null && f.awayGoals !== null)
       ? `${f.homeGoals} - ${f.awayGoals}`
-      : mzFormatKickoff(f.date);
-    const label = isLive ? `مباشر الآن — ${STATUS_LABELS[f.status] || ''}` : (STATUS_LABELS[f.status] || '');
+      : mzFormatKickoff(f.dateEvent, f.time);
+    const label = isLive ? `مباشر الآن — ${mzStatusLabel(f.status)}` : mzStatusLabel(f.status);
     return `<span class="ticker__item"><span class="ticker__dot"></span> ${f.homeTeam} ${scoreOrTime} ${f.awayTeam} — ${label}</span>`;
   });
 
@@ -92,26 +91,26 @@ function mzRenderMatches(fixtures) {
 
   const top = fixtures.slice(0, 6);
   grid.innerHTML = top.map((f, i) => {
-    const isLive = STATUS_LIVE.has(f.status);
+    const isLive = mzIsLive(f.status);
     const scoreLine = (f.homeGoals !== null && f.awayGoals !== null)
       ? `<span class="match-card__score">${f.homeGoals} - ${f.awayGoals}</span>`
-      : `<span class="match-card__score">${mzFormatKickoff(f.date)}</span>`;
+      : `<span class="match-card__score">${mzFormatKickoff(f.dateEvent, f.time)}</span>`;
 
     return `
       <article class="card reveal-scale" style="--i:${i}">
         ${isLive ? '<span class="live-badge"><span class="dot"></span> مباشر</span>' : ''}
         <div class="match-card__teams">
           <div class="match-card__team">
-            <img src="${f.homeLogo}" alt="${f.homeTeam}" loading="lazy">
+            <img src="${f.homeLogo || DEFAULT_BADGE}" alt="${f.homeTeam}" loading="lazy" onerror="this.src='${DEFAULT_BADGE}'">
             <span>${f.homeTeam}</span>
           </div>
           ${scoreLine}
           <div class="match-card__team">
-            <img src="${f.awayLogo}" alt="${f.awayTeam}" loading="lazy">
+            <img src="${f.awayLogo || DEFAULT_BADGE}" alt="${f.awayTeam}" loading="lazy" onerror="this.src='${DEFAULT_BADGE}'">
             <span>${f.awayTeam}</span>
           </div>
         </div>
-        <p class="match-card__meta">${f.league} — ${isLive ? (STATUS_LABELS[f.status] || 'مباشر') : STATUS_LABELS[f.status] || ''}</p>
+        <p class="match-card__meta">${f.league} — ${isLive ? (mzStatusLabel(f.status) || 'مباشر') : mzStatusLabel(f.status)}</p>
       </article>`;
   }).join('');
 }
@@ -133,7 +132,7 @@ async function mzLoadSportsData() {
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('tickerTrack') || document.getElementById('matchesGrid')) {
     mzLoadSportsData();
-    // refresh live scores every 90s
+    // refresh every 90s
     setInterval(mzLoadSportsData, 90000);
   }
 });

@@ -8,11 +8,9 @@
 const SUPABASE_URL = 'https://durogspcnreeuatpelmx.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_fneeld-2kjFQ8YXiGaOj2Q_qGwfp5o-';
 
-// ⚠️ TEMPORARY: calling API-Football directly from the browser so it works
-// with no server/CLI step. The key below is visible to anyone who opens
-// dev tools. Move this behind the Supabase Edge Function in
-// supabase/functions/sports-api/ before this goes live for real users.
-const API_FOOTBALL_KEY = 'a9c4073aba9f76918ebd6bd6b801ea6c';
-const API_FOOTBALL_HOST = 'api-football-v1.p.rapidapi.com';
+// TheSportsDB — API مجاني حقيقي، بيشتغل مباشرة من المتصفح بدون سيرفر
+// وسيط ومن غير تسجيل (المفتاح "3" هو مفتاح تجربة عام ومسموح بيه).
+const SPORTSDB_KEY = '3';
+const SPORTSDB_BASE = `https://www.thesportsdb.com/api/v1/json/${SPORTSDB_KEY}`;
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);

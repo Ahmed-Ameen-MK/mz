@@ -104,7 +104,14 @@ async function mzFetchTodayMatches() {
   const res = await fetch(`${FOOTBALL_DATA_BASE}/matches?dateFrom=${today}&dateTo=${today}`, {
     headers: { 'X-Auth-Token': FOOTBALL_DATA_KEY },
   });
-  if (!res.ok) throw new Error(`football-data.org ${res.status}`);
+  if (!res.ok) {
+    let apiMessage = '';
+    try {
+      const errBody = await res.json();
+      apiMessage = errBody.message || errBody.error || '';
+    } catch { /* body wasn't JSON, ignore */ }
+    throw new Error(`HTTP ${res.status}${apiMessage ? ' — ' + apiMessage : ''}`);
+  }
   const data = await res.json();
   const matches = data.matches || [];
 
@@ -176,7 +183,13 @@ async function mzLoadMatches() {
   } catch (err) {
     console.error('MZ TV matches error:', err);
     const grid = document.getElementById('matchesGrid');
-    if (grid) grid.innerHTML = '<p class="matches__loading">تعذّر تحميل مباريات اليوم، حاول لاحقًا</p>';
+    if (grid) {
+      const isNetworkError = err instanceof TypeError; // fetch throws TypeError on CORS/network block
+      const detail = isNetworkError
+        ? 'الطلب اتمنع قبل ما يوصل (على الأغلب CORS أو مفيش إنترنت)'
+        : `تفاصيل الخطأ: ${err.message}`;
+      grid.innerHTML = `<p class="matches__loading">تعذّر تحميل مباريات اليوم<br><span style="font-size:.75rem; color:var(--text-faint);">${detail}</span></p>`;
+    }
   }
 }
 

@@ -165,15 +165,6 @@ body::before{
   overflow:hidden;
   border-bottom: 1px solid var(--border-soft);
 }
-.hero__bg{
-  position:absolute; inset:0;
-  background-size: cover; background-position:center;
-  z-index:0;
-}
-.hero__bg::after{
-  content:""; position:absolute; inset:0;
-  background: linear-gradient(180deg, rgba(8,8,11,.55) 0%, rgba(8,8,11,.85) 70%, var(--bg) 100%), radial-gradient(circle at 75% 30%, rgba(124,58,237,.35), transparent 55%);
-}
 .hero__orb{
   position:absolute; border-radius:50%; filter: blur(90px);
   background: radial-gradient(circle, var(--purple-bright), transparent 70%);
@@ -388,24 +379,16 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .hero__scrim{
   position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
-    linear-gradient(180deg, rgba(8,8,11,.5) 0%, rgba(8,8,11,.88) 72%, var(--bg) 100%),
-    linear-gradient(to left, rgba(8,8,11,.82) 0%, rgba(8,8,11,.5) 38%, transparent 68%);
+    linear-gradient(180deg, rgba(8,8,11,.28) 0%, rgba(8,8,11,.62) 72%, var(--bg) 100%),
+    linear-gradient(to left, rgba(8,8,11,.55) 0%, rgba(8,8,11,.25) 38%, transparent 68%);
 }
 .hero__orb, .hero__scrim{ z-index:1; }
 .hero__inner{ z-index:2; }
 
-/* purple flicker toward the top-left, layered on top of the existing float */
-@keyframes purple-flicker{
-  0%,100%{ opacity:.32; }
-  12%{ opacity:.6; }
-  24%{ opacity:.3; }
-  38%{ opacity:.68; }
-  52%{ opacity:.4; }
-  68%{ opacity:.72; }
-  84%{ opacity:.34; }
-}
+/* purple glow toward the top-left — steady, no fade in/out */
 .hero__orb--1{
-  animation: float-orb 9s ease-in-out infinite, purple-flicker 3.2s ease-in-out infinite;
+  opacity:.6;
+  animation: none;
 }
 
 /* =================== TODAY'S MATCHES — BACKGROUND CAROUSEL =================== */
@@ -416,10 +399,10 @@ a:focus-visible, button:focus-visible, input:focus-visible{
   background-size:cover; background-position:center;
   opacity:0; transition: opacity 1.6s var(--ease);
 }
-.matches-bg__layer.is-active{ opacity:.32; }
+.matches-bg__layer.is-active{ opacity:.45; }
 .matches-scrim{
   position:absolute; inset:0; z-index:1; pointer-events:none;
-  background: linear-gradient(180deg, rgba(18,16,22,.82), rgba(18,16,22,.94));
+  background: linear-gradient(180deg, rgba(18,16,22,.62), rgba(18,16,22,.82));
 }
 .matches-today > .wrap{ position:relative; z-index:2; }
 

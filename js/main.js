@@ -57,4 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const href = a.getAttribute('href').split('/').pop();
     if (href === path) a.classList.add('active');
   });
+
+  /* ---------- Background image carousels (hero + today's matches) ---------- */
+  function mzInitBgCarousel(containerId, layerSelector, intervalMs) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const layers = container.querySelectorAll(layerSelector);
+    if (layers.length < 2) return;
+    let idx = Array.from(layers).findIndex(l => l.classList.contains('is-active'));
+    if (idx === -1) idx = 0;
+    setInterval(() => {
+      layers[idx].classList.remove('is-active');
+      idx = (idx + 1) % layers.length;
+      layers[idx].classList.add('is-active');
+    }, intervalMs);
+  }
+
+  mzInitBgCarousel('heroBgCarousel', '.hero__bg', 6000);
+  mzInitBgCarousel('matchesBg', '.matches-bg__layer', 4000);
 });

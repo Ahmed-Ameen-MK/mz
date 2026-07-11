@@ -1,7 +1,9 @@
 // ===========================================================
 // MZ TV — Live sports data
-// Pulled from a Supabase Edge Function that proxies API-Football
-// (RapidAPI key lives server-side in the function, never here).
+// ⚠️ TEMPORARY: calling API-Football directly from the browser
+// (no server needed to test). Swap mzFetchFixtures() to call the
+// Supabase Edge Function in supabase/functions/sports-api/ once
+// you're ready to hide the RapidAPI key server-side.
 // ===========================================================
 
 const STATUS_LIVE = new Set(['1H', '2H', 'HT', 'ET', 'P', 'BT', 'LIVE']);
@@ -10,6 +12,10 @@ const STATUS_LABELS = {
   FT: 'انتهت', AET: 'انتهت (تمديد)', PEN: 'انتهت (ترجيح)', PST: 'مؤجلة', CANC: 'ملغاة',
 };
 
+// Leagues surfaced first (Saudi Pro League, Champions League, Premier League,
+// Egyptian Premier League, La Liga, Europa League, Ligue 1, Serie A, Bundesliga)
+const PRIORITY_LEAGUES = [307, 2, 39, 233, 140, 3, 61, 135, 78];
+
 function mzFormatKickoff(iso) {
   const d = new Date(iso);
   return d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
@@ -17,13 +23,40 @@ function mzFormatKickoff(iso) {
 
 async function mzFetchFixtures() {
   const today = new Date().toISOString().slice(0, 10);
-  const res = await fetch(`${SPORTS_API_FUNCTION_URL}?date=${today}`, {
-    headers: { apikey: SUPABASE_PUBLISHABLE_KEY },
+  const res = await fetch(`https://${API_FOOTBALL_HOST}/v3/fixtures?date=${today}`, {
+    headers: {
+      'x-rapidapi-key': API_FOOTBALL_KEY,
+      'x-rapidapi-host': API_FOOTBALL_HOST,
+    },
   });
-  if (!res.ok) throw new Error(`sports-api ${res.status}`);
+  if (!res.ok) throw new Error(`API-Football ${res.status}`);
   const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data.fixtures || [];
+  if (data.errors && Object.keys(data.errors).length) {
+    throw new Error(JSON.stringify(data.errors));
+  }
+
+  const fixtures = (data.response || [])
+    .sort((a, b) => {
+      const aRank = PRIORITY_LEAGUES.indexOf(a.league.id);
+      const bRank = PRIORITY_LEAGUES.indexOf(b.league.id);
+      return (aRank === -1 ? 999 : aRank) - (bRank === -1 ? 999 : bRank);
+    })
+    .slice(0, 15)
+    .map(f => ({
+      id: f.fixture.id,
+      date: f.fixture.date,
+      status: f.fixture.status.short,
+      elapsed: f.fixture.status.elapsed,
+      league: f.league.name,
+      homeTeam: f.teams.home.name,
+      homeLogo: f.teams.home.logo,
+      awayTeam: f.teams.away.name,
+      awayLogo: f.teams.away.logo,
+      homeGoals: f.goals.home,
+      awayGoals: f.goals.away,
+    }));
+
+  return fixtures;
 }
 
 function mzRenderTicker(fixtures) {

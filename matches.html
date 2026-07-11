@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مواعيد ونتائج المباريات — MZ TV</title>
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="ticker">
+  <div class="ticker__track">
+    <span class="ticker__item"><span class="ticker__dot"></span> الاتحاد 2 - 1 الهلال — الشوط الثاني</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> تحديث الجدول كل دقيقة</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> 12 مباراة اليوم عبر 5 بطولات</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> الاتحاد 2 - 1 الهلال — الشوط الثاني</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> تحديث الجدول كل دقيقة</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> 12 مباراة اليوم عبر 5 بطولات</span>
+  </div>
+</div>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      <span class="brand__mark">MZ</span>
+      <span>MZ <span class="brand__tv">TV</span></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="matches.html" class="active">مواعيد المباريات</a></li>
+      <li><a href="channels/sports.html">القنوات الرياضية</a></li>
+      <li><a href="channels/movies.html">أفلام ومسلسلات</a></li>
+    </ul>
+    <div class="nav__auth">
+      <a href="auth/login.html" class="btn btn--ghost">تسجيل الدخول</a>
+      <a href="auth/register.html" class="btn btn--primary">إنشاء حساب</a>
+    </div>
+    <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero__bg" style="background-image:url('bgs/football2.png');"></div>
+  <div class="page-hero__inner">
+    <div class="breadcrumb reveal"><a href="index.html">الرئيسية</a> / مواعيد المباريات</div>
+    <h1 class="reveal">مواعيد ونتائج المباريات</h1>
+    <p class="reveal">تابع جدول المباريات اليوم والقادمة، والنتائج لحظة بلحظة، عبر أبرز البطولات المحلية والعالمية. هذه الصفحة تعرض المواعيد والنتائج فقط، ولا تقدّم أي بث للمباريات.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+
+    <!-- Filter tabs -->
+    <div class="reveal" style="display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:2.5rem;">
+      <button class="btn btn--primary" style="cursor:default;">اليوم</button>
+      <button class="btn btn--ghost">غدًا</button>
+      <button class="btn btn--ghost">هذا الأسبوع</button>
+      <button class="btn btn--ghost">كل البطولات</button>
+    </div>
+
+    <!-- Live match -->
+    <div class="section__head reveal-left">
+      <div>
+        <span class="section__label">// مباشر الآن</span>
+        <h2 class="section__title">جارية الآن</h2>
+      </div>
+    </div>
+
+    <div class="grid grid--2 stagger" style="margin-bottom:4rem;">
+      <article class="card reveal-scale">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <span class="live-badge"><span class="dot"></span> مباشر — الدقيقة 67</span>
+          <span style="color:var(--text-faint); font-size:.8rem;">الدوري السعودي للمحترفين</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-data); font-weight:700; font-size:1.4rem;">
+          <span>الاتحاد</span>
+          <span style="color:var(--purple-glow); font-size:2rem;">2 - 1</span>
+          <span>الهلال</span>
+        </div>
+      </article>
+
+      <article class="card reveal-scale">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <span class="live-badge"><span class="dot"></span> مباشر — الشوط الأول</span>
+          <span style="color:var(--text-faint); font-size:.8rem;">الدوري المصري الممتاز</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-data); font-weight:700; font-size:1.4rem;">
+          <span>الأهلي</span>
+          <span style="color:var(--purple-glow); font-size:2rem;">1 - 0</span>
+          <span>بيراميدز</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Upcoming -->
+    <div class="section__head reveal-left">
+      <div>
+        <span class="section__label">// قادمة</span>
+        <h2 class="section__title">مباريات اليوم القادمة</h2>
+      </div>
+    </div>
+
+    <div class="grid stagger" style="grid-template-columns:1fr; gap:1rem; margin-bottom:4rem;">
+      <article class="card reveal" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <span style="color:var(--text-faint); font-family:var(--font-data); font-size:.85rem; min-width:110px;">دوري أبطال أوروبا</span>
+        <div style="display:flex; align-items:center; gap:1rem; font-weight:700;">
+          <span>ريال مدريد</span>
+          <span style="color:var(--text-dim);">vs</span>
+          <span>مانشستر سيتي</span>
+        </div>
+        <span style="font-family:var(--font-data); color:var(--purple-glow); font-weight:700;">22:00</span>
+      </article>
+
+      <article class="card reveal" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <span style="color:var(--text-faint); font-family:var(--font-data); font-size:.85rem; min-width:110px;">الدوري الإنجليزي</span>
+        <div style="display:flex; align-items:center; gap:1rem; font-weight:700;">
+          <span>ليفربول</span>
+          <span style="color:var(--text-dim);">vs</span>
+          <span>أرسنال</span>
+        </div>
+        <span style="font-family:var(--font-data); color:var(--purple-glow); font-weight:700;">19:30</span>
+      </article>
+
+      <article class="card reveal" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <span style="color:var(--text-faint); font-family:var(--font-data); font-size:.85rem; min-width:110px;">الدوري المصري</span>
+        <div style="display:flex; align-items:center; gap:1rem; font-weight:700;">
+          <span>الزمالك</span>
+          <span style="color:var(--text-dim);">vs</span>
+          <span>الإسماعيلي</span>
+        </div>
+        <span style="font-family:var(--font-data); color:var(--purple-glow); font-weight:700;">20:00</span>
+      </article>
+    </div>
+
+    <!-- Recent results -->
+    <div class="section__head reveal-left">
+      <div>
+        <span class="section__label">// انتهت</span>
+        <h2 class="section__title">آخر النتائج</h2>
+      </div>
+    </div>
+
+    <div class="grid grid--3 stagger">
+      <article class="card reveal">
+        <span style="color:var(--text-faint); font-size:.8rem;">أمس — الدوري السعودي</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-data); font-weight:700; margin-top:.8rem;">
+          <span>النصر</span><span style="color:var(--purple-glow);">3 - 0</span><span>الشباب</span>
+        </div>
+      </article>
+      <article class="card reveal">
+        <span style="color:var(--text-faint); font-size:.8rem;">أمس — الليغا</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-data); font-weight:700; margin-top:.8rem;">
+          <span>برشلونة</span><span style="color:var(--purple-glow);">2 - 2</span><span>أتلتيكو</span>
+        </div>
+      </article>
+      <article class="card reveal">
+        <span style="color:var(--text-faint); font-size:.8rem;">أمس — السيريا A</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-data); font-weight:700; margin-top:.8rem;">
+          <span>ميلان</span><span style="color:var(--purple-glow);">1 - 1</span><span>إنتر</span>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer__bottom" style="border-top:none; padding-top:0;">
+    <span>© 2026 MZ TV — جميع الحقوق محفوظة</span>
+    <a href="index.html" style="color:var(--purple-bright);">العودة للرئيسية</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

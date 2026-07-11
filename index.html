@@ -12,15 +12,10 @@
 
 <!-- Ticker -->
 <div class="ticker" aria-label="آخر الأخبار">
-  <div class="ticker__track">
-    <span class="ticker__item"><span class="ticker__dot"></span> الاتحاد 2 - 1 الهلال — الشوط الثاني</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> ريال مدريد يواجه مانشستر سيتي غدًا الساعة 22:00</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> جدول قنوات البطولات محدث الآن</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> مراجعة جديدة لأحدث مسلسل درامي</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> الاتحاد 2 - 1 الهلال — الشوط الثاني</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> ريال مدريد يواجه مانشستر سيتي غدًا الساعة 22:00</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> جدول قنوات البطولات محدث الآن</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> مراجعة جديدة لأحدث مسلسل درامي</span>
+  <div class="ticker__track" id="tickerTrack">
+    <!-- fallback content while the live API loads -->
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
   </div>
 </div>
 
@@ -41,13 +36,27 @@
       <a href="auth/login.html" class="btn btn--ghost">تسجيل الدخول</a>
       <a href="auth/register.html" class="btn btn--primary">إنشاء حساب</a>
     </div>
+    <div class="nav__account" id="navAccount">
+      <button type="button" class="nav__account-btn" id="navAccountBtn">
+        <span class="nav__account-avatar" id="navAccountAvatar">?</span>
+        <span class="nav__account-name" id="navAccountName">الحساب</span>
+      </button>
+      <div class="nav__account-menu">
+        <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
+      </div>
+    </div>
     <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
   </nav>
 </header>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero__bg" style="background-image:url('bgs/football.png');"></div>
+  <div class="hero__bg-carousel" id="heroBgCarousel">
+    <div class="hero__bg is-active" style="background-image:url('bgs/main.png');"></div>
+    <div class="hero__bg" style="background-image:url('bgs/sports1.png');"></div>
+    <div class="hero__bg" style="background-image:url('bgs/sports2.png');"></div>
+  </div>
+  <div class="hero__scrim"></div>
   <div class="hero__orb hero__orb--1"></div>
   <div class="hero__orb hero__orb--2"></div>
   <div class="hero__inner">
@@ -101,7 +110,12 @@
 </section>
 
 <!-- Featured matches strip -->
-<section class="section section--alt">
+<section class="section matches-today" id="matchesToday">
+  <div class="matches-bg" id="matchesBg">
+    <div class="matches-bg__layer is-active" style="background-image:url('bgs/sports1.png');"></div>
+    <div class="matches-bg__layer" style="background-image:url('bgs/sports2.png');"></div>
+  </div>
+  <div class="matches-scrim"></div>
   <div class="wrap">
     <div class="section__head reveal-left">
       <div>
@@ -111,20 +125,8 @@
       <a href="matches.html" class="btn btn--ghost">كل المباريات ←</a>
     </div>
 
-    <div class="grid grid--3 stagger">
-      <article class="card reveal-scale">
-        <span class="live-badge"><span class="dot"></span> مباشر</span>
-        <h3 style="margin-top:1rem;">الاتحاد <span style="color:var(--purple-glow)">2 - 1</span> الهلال</h3>
-        <p>الدوري السعودي للمحترفين — الشوط الثاني</p>
-      </article>
-      <article class="card reveal-scale">
-        <h3 style="margin-top:.2rem;">ريال مدريد <span style="color:var(--text-dim)">vs</span> مانشستر سيتي</h3>
-        <p>دوري أبطال أوروبا — غدًا 22:00 بتوقيت القاهرة</p>
-      </article>
-      <article class="card reveal-scale">
-        <h3 style="margin-top:.2rem;">الأهلي <span style="color:var(--text-dim)">vs</span> الزمالك</h3>
-        <p>الدوري المصري الممتاز — السبت 20:00</p>
-      </article>
+    <div class="grid grid--3 stagger" id="matchesGrid">
+      <p class="matches__loading">جارِ تحميل مباريات اليوم…</p>
     </div>
   </div>
 </section>
@@ -212,6 +214,10 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sports-data.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

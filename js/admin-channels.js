@@ -126,7 +126,7 @@ function adminChRenderTable() {
 
   tbody.innerHTML = adminChChannels.map(c => `
     <tr>
-      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || adminChEsc(c.onerror) || adminChDefaultAvatar(c.channel)}" alt="${adminChEsc(c.channel)}" onerror="adminChImgFallback(this, '${adminChEsc(c.onerror)}', '${adminChEsc(adminChDefaultAvatar(c.channel))}')"></td>
+      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || adminChEsc(c.onerror) || adminChDefaultAvatar(c.channel)}" alt="${adminChEsc(c.channel)}" referrerpolicy="no-referrer" onerror="adminChImgFallback(this, '${adminChEsc(c.onerror)}', '${adminChEsc(adminChDefaultAvatar(c.channel))}')"></td>
       <td>${adminChEsc(c.channel)}</td>
       <td><span class="badge">${adminChEsc(c.type)}</span></td>
       <td>${adminChSourcesBadges(c)}</td>

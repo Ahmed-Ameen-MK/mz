@@ -74,7 +74,7 @@ function chRenderGrid() {
 
   grid.innerHTML = list.map((c, i) => `
     <button type="button" class="ch-card reveal-scale ${chActivePlayingId === String(c.id) ? 'is-playing' : ''}" style="--i:${i % 8}" data-id="${c.id}">
-      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || chDefaultAvatar(c.channel)}" alt="${chEsc(c.channel)}" loading="lazy" onerror="chImgFallback(this, '${chEsc(c.onerror)}', '${chEsc(chDefaultAvatar(c.channel))}')">
+      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || chDefaultAvatar(c.channel)}" alt="${chEsc(c.channel)}" loading="lazy" referrerpolicy="no-referrer" onerror="chImgFallback(this, '${chEsc(c.onerror)}', '${chEsc(chDefaultAvatar(c.channel))}')">
       <span class="ch-card__name">${chEsc(c.channel)}</span>
       <span class="ch-card__type">${chEsc(c.type)}</span>
     </button>

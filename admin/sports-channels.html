@@ -48,11 +48,31 @@
 
     <div class="form-row">
       <label class="form-field">
-        <span>رابط البث المباشر (stream_url)</span>
-        <input type="url" id="channelStreamUrl" required placeholder="https://example.com/stream">
+        <span>رابط بث 1 (اختياري)</span>
+        <input type="url" id="channelStream1" placeholder="https://example.com/stream1">
       </label>
       <label class="form-field">
-        <span>رابط أيقونة القناة (avatar_url)</span>
+        <span>رابط بث 2 (اختياري)</span>
+        <input type="url" id="channelStream2" placeholder="https://example.com/stream2">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label class="form-field">
+        <span>رابط بث 3 (اختياري)</span>
+        <input type="url" id="channelStream3" placeholder="https://example.com/stream3">
+      </label>
+      <label class="form-field">
+        <span>رمز تضمين يوتيوب (اختياري)</span>
+        <input type="text" id="channelYoutubeCode" placeholder="مثال: dQw4w9WgXcQ أو live_stream?channel=UCxxxx">
+      </label>
+    </div>
+
+    <p style="color:var(--text-faint); font-size:.8rem; margin-bottom:1.1rem;">* لازم رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو رمز تضمين يوتيوب.</p>
+
+    <div class="form-row">
+      <label class="form-field">
+        <span>رابط أيقونة القناة (اختياري)</span>
         <input type="url" id="channelAvatarUrl" placeholder="https://example.com/logo.png">
       </label>
     </div>
@@ -72,7 +92,7 @@
           <th>الأيقونة</th>
           <th>اسم القناة</th>
           <th>القسم</th>
-          <th>رابط البث</th>
+          <th>مصادر البث</th>
           <th>إجراءات</th>
         </tr>
       </thead>

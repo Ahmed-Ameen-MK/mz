@@ -1,6 +1,7 @@
 // ===========================================================
 // MZ TV — لوحة تحكم القنوات الرياضية (admin/sports-channels.html)
 // نشر / تعديل / حذف صفوف جدول channels في Supabase
+// الأعمدة: channel, type, stream1, stream2, stream3, youtube_code, avatar_url
 // ===========================================================
 
 const ADMIN_CH_PRESET_TYPES = ['دوريات كبرى', 'مصري', 'إماراتي', 'قطري', 'سعودي'];
@@ -55,6 +56,17 @@ function adminChToggleNewTypeRow() {
   if (input) input.required = isNew;
 }
 
+// يبني شارات صغيرة توضّح مصادر البث المتاحة لكل قناة في الجدول
+function adminChSourcesBadges(c) {
+  const badges = [];
+  if (c.stream1) badges.push('بث 1');
+  if (c.stream2) badges.push('بث 2');
+  if (c.stream3) badges.push('بث 3');
+  if (c.youtube_code) badges.push('يوتيوب');
+  if (!badges.length) return '<span style="color:var(--text-faint); font-size:.8rem;">لا يوجد</span>';
+  return badges.map(b => `<span class="badge" style="margin-inline-end:.35rem;">${b}</span>`).join('');
+}
+
 async function adminChLoad() {
   const tbody = document.getElementById('channelsTableBody');
   try {
@@ -86,7 +98,7 @@ function adminChRenderTable() {
       <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || ADMIN_CH_DEFAULT_AVATAR}" alt="${adminChEsc(c.channel)}" onerror="this.src='${ADMIN_CH_DEFAULT_AVATAR}'"></td>
       <td>${adminChEsc(c.channel)}</td>
       <td><span class="badge">${adminChEsc(c.type)}</span></td>
-      <td class="admin-table__url"><a href="${adminChEsc(c.stream_url)}" target="_blank" rel="noopener">${adminChEsc(c.stream_url)}</a></td>
+      <td>${adminChSourcesBadges(c)}</td>
       <td class="admin-table__actions">
         <button type="button" class="btn btn--ghost btn--sm" data-edit="${c.id}">تعديل</button>
         <button type="button" class="btn btn--danger btn--sm" data-delete="${c.id}">حذف</button>
@@ -109,10 +121,14 @@ function adminChStartEdit(id) {
   adminChEditingId = ch.id;
   document.getElementById('channelId').value = ch.id;
   document.getElementById('channelName').value = ch.channel;
-  document.getElementById('channelStreamUrl').value = ch.stream_url;
+  document.getElementById('channelStream1').value = ch.stream1 || '';
+  document.getElementById('channelStream2').value = ch.stream2 || '';
+  document.getElementById('channelStream3').value = ch.stream3 || '';
+  document.getElementById('channelYoutubeCode').value = ch.youtube_code || '';
   document.getElementById('channelAvatarUrl').value = ch.avatar_url || '';
   adminChBuildTypeOptions(ch.type);
 
+  document.getElementById('channelFormTitle').textContent = `تعديل قناة: ${ch.channel}`;
   document.getElementById('channelSubmitBtn').textContent = 'حفظ التعديلات';
   document.getElementById('channelCancelEditBtn').style.display = 'inline-flex';
   adminChSetMsg('', null);
@@ -124,6 +140,7 @@ function adminChResetForm() {
   document.getElementById('channelForm')?.reset();
   document.getElementById('channelId').value = '';
   adminChBuildTypeOptions();
+  document.getElementById('channelFormTitle').textContent = 'نشر قناة جديدة';
   document.getElementById('channelSubmitBtn').textContent = 'نشر القناة';
   document.getElementById('channelCancelEditBtn').style.display = 'none';
   adminChSetMsg('', null);
@@ -152,15 +169,33 @@ async function adminChSubmit(e) {
   const select = document.getElementById('channelTypeSelect');
   const newTypeInput = document.getElementById('channelTypeNew');
   const type = select.value === '__new__' ? newTypeInput.value.trim() : select.value;
-  const streamUrl = document.getElementById('channelStreamUrl').value.trim();
+
+  const stream1 = document.getElementById('channelStream1').value.trim();
+  const stream2 = document.getElementById('channelStream2').value.trim();
+  const stream3 = document.getElementById('channelStream3').value.trim();
+  const youtubeCode = document.getElementById('channelYoutubeCode').value.trim();
   const avatarUrl = document.getElementById('channelAvatarUrl').value.trim();
 
-  if (!name || !type || !streamUrl) {
-    adminChSetMsg('من فضلك املأ اسم القناة والقسم ورابط البث', 'error');
+  if (!name || !type) {
+    adminChSetMsg('من فضلك املأ اسم القناة والقسم', 'error');
     return;
   }
 
-  const payload = { channel: name, type, stream_url: streamUrl, avatar_url: avatarUrl || null };
+  if (!stream1 && !stream2 && !stream3 && !youtubeCode) {
+    adminChSetMsg('لازم تدخل رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو رمز تضمين يوتيوب', 'error');
+    return;
+  }
+
+  const payload = {
+    channel: name,
+    type,
+    stream1: stream1 || null,
+    stream2: stream2 || null,
+    stream3: stream3 || null,
+    youtube_code: youtubeCode || null,
+    avatar_url: avatarUrl || null,
+  };
+
   const submitBtn = document.getElementById('channelSubmitBtn');
   submitBtn.disabled = true;
 

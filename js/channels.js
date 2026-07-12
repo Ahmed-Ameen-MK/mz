@@ -1,13 +1,15 @@
 // ===========================================================
 // MZ TV — القنوات الرياضية (صفحة العرض العامة)
 // يقرأ من جدول channels في Supabase ويعرضها كأزرار أقسام + شبكة
-// قنوات، وعند اختيار قناة يشغّلها داخل iframe مباشرةً.
+// قنوات. شاشة البث تظهر فقط بعد اختيار قناة، وتعرض أزرار تبديل
+// بين المصادر المتاحة (بث 1 / بث 2 / بث 3 / بث يوتيوب).
 // ===========================================================
 
 const CH_DEFAULT_AVATAR = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="%2316131b"/><text x="50%25" y="58%25" font-size="16" fill="%23a79fb3" text-anchor="middle" font-family="sans-serif">📡</text></svg>';
 
 let chAllChannels = [];
 let chActiveType = 'all';
+let chActivePlayingId = null;
 
 function chEsc(s) {
   return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -65,7 +67,7 @@ function chRenderGrid() {
   }
 
   grid.innerHTML = list.map((c, i) => `
-    <button type="button" class="ch-card reveal-scale" style="--i:${i % 8}" data-id="${c.id}">
+    <button type="button" class="ch-card reveal-scale ${chActivePlayingId === String(c.id) ? 'is-playing' : ''}" style="--i:${i % 8}" data-id="${c.id}">
       <img src="${chEsc(c.avatar_url) || CH_DEFAULT_AVATAR}" alt="${chEsc(c.channel)}" loading="lazy" onerror="this.src='${CH_DEFAULT_AVATAR}'">
       <span class="ch-card__name">${chEsc(c.channel)}</span>
       <span class="ch-card__type">${chEsc(c.type)}</span>
@@ -75,31 +77,64 @@ function chRenderGrid() {
   grid.querySelectorAll('.ch-card').forEach(card => {
     card.addEventListener('click', () => chPlayChannel(card.dataset.id));
   });
+}
 
-  // keep the "now playing" highlight in sync if a channel is already active
-  const current = document.querySelector('.channel-player iframe');
-  if (current) {
-    const playingId = current.dataset.channelId;
-    grid.querySelector(`.ch-card[data-id="${CSS.escape(playingId || '')}"]`)?.classList.add('is-playing');
-  }
+// يبني قائمة مصادر البث المتاحة للقناة بالترتيب: بث1، بث2، بث3، ثم كود يوتيوب
+function chBuildSources(ch) {
+  const sources = [];
+  if (ch.stream1) sources.push({ label: 'بث 1', url: ch.stream1 });
+  if (ch.stream2) sources.push({ label: 'بث 2', url: ch.stream2 });
+  if (ch.stream3) sources.push({ label: 'بث 3', url: ch.stream3 });
+  if (ch.youtube_code) sources.push({ label: 'بث', url: `https://www.youtube.com/embed/${ch.youtube_code}` });
+  return sources;
+}
+
+function chSetPlayerSource(url) {
+  const playerWrap = document.getElementById('channelPlayer');
+  if (!playerWrap) return;
+  playerWrap.innerHTML = `<iframe src="${chEsc(url)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
 }
 
 function chPlayChannel(id) {
   const ch = chAllChannels.find(c => String(c.id) === String(id));
   if (!ch) return;
 
-  document.querySelectorAll('.ch-card').forEach(c => c.classList.toggle('is-playing', c.dataset.id === String(id)));
+  chActivePlayingId = String(id);
+  document.querySelectorAll('.ch-card').forEach(c => c.classList.toggle('is-playing', c.dataset.id === chActivePlayingId));
 
-  const playerWrap = document.getElementById('channelPlayer');
+  const section = document.getElementById('channelPlayerSection');
   const nameEl = document.getElementById('channelPlayerName');
   const typeEl = document.getElementById('channelPlayerType');
-  if (!playerWrap) return;
+  const switchWrap = document.getElementById('streamSwitch');
+  const playerWrap = document.getElementById('channelPlayer');
 
-  playerWrap.innerHTML = `<iframe src="${chEsc(ch.stream_url)}" data-channel-id="${chEsc(ch.id)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
+  const sources = chBuildSources(ch);
+
+  if (!sources.length) {
+    if (playerWrap) playerWrap.innerHTML = '<div class="channel-player__placeholder"><p>لا يوجد رابط بث متاح لهذه القناة حاليًا</p></div>';
+    if (switchWrap) switchWrap.innerHTML = '';
+  } else {
+    chSetPlayerSource(sources[0].url);
+    if (switchWrap) {
+      switchWrap.innerHTML = sources.map((s, i) =>
+        `<button type="button" class="stream-switch__btn ${i === 0 ? 'is-active' : ''}" data-url="${chEsc(s.url)}">${chEsc(s.label)}</button>`
+      ).join('');
+
+      switchWrap.querySelectorAll('.stream-switch__btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchWrap.querySelectorAll('.stream-switch__btn').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          chSetPlayerSource(btn.dataset.url);
+        });
+      });
+    }
+  }
+
   if (nameEl) nameEl.textContent = ch.channel;
   if (typeEl) typeEl.textContent = ch.type;
 
-  document.getElementById('channelPlayerSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  section?.classList.add('is-active');
+  section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

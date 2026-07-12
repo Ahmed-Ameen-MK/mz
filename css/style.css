@@ -539,7 +539,10 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 }
 .ch-card:hover{ transform: translateY(-4px); border-color: var(--purple); }
 .ch-card.is-playing{ border-color: var(--purple-bright); box-shadow: 0 12px 30px -14px rgba(168,85,247,.6); }
-.ch-card img{ width:52px; height:52px; object-fit:contain; }
+.ch-card img{
+  width:52px; height:52px; object-fit:contain;
+  background:#fff; border-radius:10px; padding:6px;
+}
 .ch-card__name{ font-weight:700; font-size:.88rem; }
 .ch-card__type{ font-family: var(--font-data); font-size:.68rem; color: var(--text-faint); }
 
@@ -577,7 +580,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .admin-table{ width:100%; border-collapse:collapse; font-size:.88rem; }
 .admin-table th, .admin-table td{ padding:.85rem 1rem; text-align:right; border-bottom:1px solid var(--border-soft); white-space:nowrap; }
 .admin-table th{ color: var(--text-faint); font-family: var(--font-data); font-weight:700; font-size:.78rem; background: var(--bg-elevated); }
-.admin-table__avatar{ width:32px; height:32px; object-fit:contain; }
+.admin-table__avatar{ width:32px; height:32px; object-fit:contain; background:#fff; border-radius:6px; padding:3px; }
 .admin-table__url a{ color: var(--purple-bright); max-width:220px; overflow:hidden; text-overflow:ellipsis; display:inline-block; vertical-align:middle; }
 .admin-table__actions{ display:flex; gap:.5rem; }
 

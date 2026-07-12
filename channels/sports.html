@@ -58,20 +58,16 @@
   </div>
 </section>
 
-<!-- Player -->
-<section class="section channel-player-section" id="channelPlayerSection" style="padding-bottom:0;">
+<!-- Player (hidden until a channel is selected) -->
+<section class="section channel-player-section" id="channelPlayerSection">
   <div class="wrap">
-    <div class="channel-player" id="channelPlayer">
-      <div class="channel-player__placeholder">
-        <div class="card__icon" style="margin:0;">📡</div>
-        <p>اختر قناة من القائمة بالأسفل لبدء المشاهدة</p>
-      </div>
-    </div>
+    <div class="channel-player" id="channelPlayer"></div>
     <div class="channel-player__meta">
       <span class="live-badge"><span class="dot"></span> مباشر</span>
       <strong id="channelPlayerName">—</strong>
       <span class="badge" id="channelPlayerType">—</span>
     </div>
+    <div class="stream-switch" id="streamSwitch"></div>
   </div>
 </section>
 

@@ -3,23 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دليل القنوات الرياضية الرسمية — MZ TV</title>
+<title>القنوات الرياضية — MZ TV</title>
+<meta name="description" content="دليل شامل لأهم القنوات الرياضية الفضائية: دوريات كبرى، مصري، إماراتي، قطري، سعودي وغيرها، مع بث مباشر لحظي لكل قناة.">
 <link rel="icon" href="../icon.png" type="image/png">
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-<div class="ticker">
-  <div class="ticker__track">
-    <span class="ticker__item"><span class="ticker__dot"></span> دليل منصات البث الرياضي الرسمية</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> روابط مباشرة لكل منصة</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> محدث دوريًا</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> دليل منصات البث الرياضي الرسمية</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> روابط مباشرة لكل منصة</span>
-    <span class="ticker__item"><span class="ticker__dot"></span> محدث دوريًا</span>
+<!-- Ticker -->
+<div class="ticker" aria-label="آخر الأخبار">
+  <div class="ticker__track" id="tickerTrack">
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
   </div>
 </div>
 
+<!-- Header -->
 <header class="site-header">
   <nav class="nav">
     <a href="../index.html" class="brand">
@@ -36,104 +35,105 @@
       <a href="../auth/login.html" class="btn btn--ghost">تسجيل الدخول</a>
       <a href="../auth/register.html" class="btn btn--primary">إنشاء حساب</a>
     </div>
+    <div class="nav__account" id="navAccount">
+      <button type="button" class="nav__account-btn" id="navAccountBtn">
+        <span class="nav__account-avatar" id="navAccountAvatar">?</span>
+        <span class="nav__account-name" id="navAccountName">الحساب</span>
+      </button>
+      <div class="nav__account-menu">
+        <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
+      </div>
+    </div>
     <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
   </nav>
 </header>
 
+<!-- Page hero -->
 <section class="page-hero">
-  <div class="page-hero__bg" style="background-image:url('../bgs/sports-channel1.png');"></div>
+  <div class="page-hero__bg" style="background-image:url('../bgs/sports-channels.png');"></div>
   <div class="page-hero__inner">
-    <div class="breadcrumb reveal"><a href="../index.html">الرئيسية</a> / القنوات الرياضية</div>
-    <h1 class="reveal">دليل القنوات والمنصات الرياضية الرسمية</h1>
-    <p class="reveal">مجموعة مختارة من منصات البث الرياضي الرسمية والمرخّصة في المنطقة العربية والعالم. هذه الصفحة دليل إرشادي فقط وتوجّهك لموقع كل منصة رسميًا — MZ TV لا يستضيف أو يعيد بث أي محتوى.</p>
+    <div class="breadcrumb"><a href="../index.html">الرئيسية</a> / القنوات الرياضية</div>
+    <h1>القنوات الرياضية</h1>
+    <p>اختر قناتك المفضلة من الأقسام أدناه وشاهد البث المباشر فورًا داخل الصفحة.</p>
   </div>
 </section>
 
-<section class="section">
+<!-- Player -->
+<section class="section channel-player-section" id="channelPlayerSection" style="padding-bottom:0;">
   <div class="wrap">
-
-    <div class="section__head reveal-left">
-      <div>
-        <span class="section__label">// منصات إقليمية</span>
-        <h2 class="section__title">منصات البث العربية الرسمية</h2>
+    <div class="channel-player" id="channelPlayer">
+      <div class="channel-player__placeholder">
+        <div class="card__icon" style="margin:0;">📡</div>
+        <p>اختر قناة من القائمة بالأسفل لبدء المشاهدة</p>
       </div>
     </div>
-
-    <div class="grid grid--3 stagger" style="margin-bottom:4rem;">
-      <article class="card reveal">
-        <div class="card__icon">📺</div>
-        <h3>SSC — القنوات السعودية الرياضية</h3>
-        <p>الناقل الرسمي لمباريات الدوري السعودي للمحترفين وبطولات محلية أخرى.</p>
-        <br>
-        <a href="https://www.ssc.tv" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
-
-      <article class="card reveal">
-        <div class="card__icon">📺</div>
-        <h3>beIN SPORTS</h3>
-        <p>الناقل الرسمي لدوري أبطال أوروبا والعديد من البطولات الأوروبية الكبرى في المنطقة.</p>
-        <br>
-        <a href="https://www.beinsports.com" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
-
-      <article class="card reveal">
-        <div class="card__icon">📺</div>
-        <h3>شاهد — Shahid</h3>
-        <p>منصة البث الرسمية التي تضم محتوى رياضيًا وترفيهيًا مرخّصًا لمنطقة الشرق الأوسط.</p>
-        <br>
-        <a href="https://shahid.mbc.net" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
+    <div class="channel-player__meta">
+      <span class="live-badge"><span class="dot"></span> مباشر</span>
+      <strong id="channelPlayerName">—</strong>
+      <span class="badge" id="channelPlayerType">—</span>
     </div>
-
-    <div class="section__head reveal-left">
-      <div>
-        <span class="section__label">// منصات عالمية</span>
-        <h2 class="section__title">منصات بث عالمية</h2>
-      </div>
-    </div>
-
-    <div class="grid grid--3 stagger" style="margin-bottom:4rem;">
-      <article class="card reveal">
-        <div class="card__icon">🌍</div>
-        <h3>DAZN</h3>
-        <p>منصة اشتراك عالمية تغطي دوريات كرة القدم والملاكمة والرياضات القتالية.</p>
-        <br>
-        <a href="https://www.dazn.com" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
-
-      <article class="card reveal">
-        <div class="card__icon">🌍</div>
-        <h3>ESPN</h3>
-        <p>واحدة من أكبر الشبكات الرياضية العالمية، تغطي دوريات أمريكية وعالمية متعددة.</p>
-        <br>
-        <a href="https://www.espn.com" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
-
-      <article class="card reveal">
-        <div class="card__icon">🌍</div>
-        <h3>Sky Sports</h3>
-        <p>الناقل الرسمي لمباريات الدوري الإنجليزي الممتاز وبطولات أخرى في المملكة المتحدة.</p>
-        <br>
-        <a href="https://www.skysports.com" target="_blank" rel="noopener" class="btn btn--ghost">زيارة الموقع الرسمي ↗</a>
-      </article>
-    </div>
-
-    <!-- Note box -->
-    <article class="card reveal-scale" style="background:var(--purple-deep); border-color:transparent;">
-      <h3 style="margin-bottom:.6rem;">ℹ️ ملاحظة</h3>
-      <p style="color:#e9e3f7;">MZ TV يقدّم فقط روابط إرشادية لمنصات البث الرسمية والمرخّصة. لمشاهدة المباريات، يرجى الاشتراك مباشرة عبر الموقع الرسمي للمنصة المطلوبة.</p>
-    </article>
-
   </div>
 </section>
 
+<!-- Channels list -->
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="ch-filters" id="channelsFilters">
+      <span class="ch-filters__label">◆ الأقسام</span>
+      <button type="button" class="ch-filter is-active" data-type="all">كل القنوات</button>
+    </div>
+
+    <div class="ch-grid" id="channelsGrid">
+      <p class="matches__loading">جارِ تحميل القنوات…</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
 <footer class="site-footer">
-  <div class="footer__bottom" style="border-top:none; padding-top:0;">
+  <div class="footer__grid">
+    <div>
+      <a href="../index.html" class="brand" style="margin-bottom:1rem; display:flex;">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </a>
+      <p style="color:var(--text-dim); font-size:.9rem; max-width:32ch;">منصتك اليومية لمتابعة الرياضة والترفيه: مواعيد، نتائج، وأدلة موثوقة لمصادر البث الرسمية.</p>
+    </div>
+    <div>
+      <h4>الأقسام</h4>
+      <ul>
+        <li><a href="../matches.html">مواعيد المباريات</a></li>
+        <li><a href="sports.html">القنوات الرياضية</a></li>
+        <li><a href="movies.html">أفلام ومسلسلات</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>الحساب</h4>
+      <ul>
+        <li><a href="../auth/login.html">تسجيل الدخول</a></li>
+        <li><a href="../auth/register.html">إنشاء حساب</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>معلومات</h4>
+      <ul>
+        <li><a href="#">من نحن</a></li>
+        <li><a href="#">تواصل معنا</a></li>
+        <li><a href="#">سياسة الخصوصية</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
     <span>© 2026 MZ TV — جميع الحقوق محفوظة</span>
-    <a href="../index.html" style="color:var(--purple-bright);">العودة للرئيسية</a>
+    <span>صُنع لعشّاق الرياضة والترفيه</span>
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/sports-data.js"></script>
+<script src="../js/channels.js"></script>
 <script src="../js/main.js"></script>
 </body>
 </html>

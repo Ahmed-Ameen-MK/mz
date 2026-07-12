@@ -476,6 +476,9 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .btn[disabled]{ opacity:.6; cursor:not-allowed; transform:none !important; }
 
 /* =================== SPORTS CHANNELS — PUBLIC PAGE =================== */
+.channel-player-section{ display:none; padding-bottom:0; }
+.channel-player-section.is-active{ display:block; }
+
 .channel-player{
   position:relative; aspect-ratio:16/9; width:100%;
   background:#000; border:1px solid var(--border); overflow:hidden;
@@ -487,10 +490,24 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 }
 .channel-player__placeholder .card__icon{ margin-bottom:.3rem; }
 .channel-player__meta{
-  display:flex; align-items:center; gap:.9rem; margin:1.3rem 0 2.4rem;
+  display:flex; align-items:center; gap:.9rem; margin:1.3rem 0 0;
   font-family: var(--font-data);
 }
 .channel-player__meta strong{ font-size:1.05rem; font-family: var(--font-body); }
+
+.stream-switch{ display:flex; flex-wrap:wrap; gap:.6rem; margin:1.1rem 0 2.4rem; }
+.stream-switch__btn{
+  background: var(--bg-card); border:1px solid var(--border); color: var(--text-dim);
+  font-family: var(--font-data); font-weight:700; font-size:.8rem;
+  padding:.5rem 1.1rem; cursor:pointer;
+  clip-path: polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);
+  transition: all .25s var(--ease);
+}
+.stream-switch__btn:hover{ border-color: var(--purple-bright); color: var(--text); }
+.stream-switch__btn.is-active{
+  background: linear-gradient(135deg, var(--purple-bright), var(--purple-deep));
+  border-color: transparent; color:#fff;
+}
 
 .ch-filters{ display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom: 2.4rem; }
 .ch-filters__label{

@@ -14,6 +14,20 @@ function adminChEsc(s) {
   return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
 
+// يقبل: كود iframe كامل ملصوق من يوتيوب، أو رابط embed مباشر، أو مجرد video ID
+function adminChExtractYoutubeSrc(raw) {
+  const val = (raw || '').trim();
+  if (!val) return '';
+
+  const iframeMatch = val.match(/src=["']([^"']+)["']/i);
+  if (iframeMatch) return iframeMatch[1];
+
+  if (/^https?:\/\//i.test(val)) return val;
+
+  // مجرد كود فيديو
+  return `https://www.youtube.com/embed/${val}`;
+}
+
 function adminChSetMsg(text, kind) {
   const el = document.getElementById('channelFormMsg');
   if (!el) return;
@@ -56,7 +70,7 @@ function adminChToggleNewTypeRow() {
   if (input) input.required = isNew;
 }
 
-// يبني شارات صغيرة توضّح مصادر البث المتاحة لكل قناة في الجدول
+// شارات صغيرة توضّح مصادر البث المتاحة لكل قناة في الجدول
 function adminChSourcesBadges(c) {
   const badges = [];
   if (c.stream1) badges.push('بث 1');
@@ -65,6 +79,17 @@ function adminChSourcesBadges(c) {
   if (c.youtube_code) badges.push('يوتيوب');
   if (!badges.length) return '<span style="color:var(--text-faint); font-size:.8rem;">لا يوجد</span>';
   return badges.map(b => `<span class="badge" style="margin-inline-end:.35rem;">${b}</span>`).join('');
+}
+
+// أيقونة القناة الأساسية → عمود onerror الاحتياطي → صورة افتراضية
+function adminChImgFallback(imgEl, fallbackUrl) {
+  if (fallbackUrl && imgEl.src !== fallbackUrl) {
+    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = ADMIN_CH_DEFAULT_AVATAR; };
+    imgEl.src = fallbackUrl;
+  } else {
+    imgEl.onerror = null;
+    imgEl.src = ADMIN_CH_DEFAULT_AVATAR;
+  }
 }
 
 async function adminChLoad() {
@@ -95,7 +120,7 @@ function adminChRenderTable() {
 
   tbody.innerHTML = adminChChannels.map(c => `
     <tr>
-      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || ADMIN_CH_DEFAULT_AVATAR}" alt="${adminChEsc(c.channel)}" onerror="this.src='${ADMIN_CH_DEFAULT_AVATAR}'"></td>
+      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || adminChEsc(c.onerror) || ADMIN_CH_DEFAULT_AVATAR}" alt="${adminChEsc(c.channel)}" onerror="adminChImgFallback(this, '${adminChEsc(c.onerror)}')"></td>
       <td>${adminChEsc(c.channel)}</td>
       <td><span class="badge">${adminChEsc(c.type)}</span></td>
       <td>${adminChSourcesBadges(c)}</td>
@@ -126,6 +151,7 @@ function adminChStartEdit(id) {
   document.getElementById('channelStream3').value = ch.stream3 || '';
   document.getElementById('channelYoutubeCode').value = ch.youtube_code || '';
   document.getElementById('channelAvatarUrl').value = ch.avatar_url || '';
+  document.getElementById('channelOnerror').value = ch.onerror || '';
   adminChBuildTypeOptions(ch.type);
 
   document.getElementById('channelFormTitle').textContent = `تعديل قناة: ${ch.channel}`;
@@ -173,8 +199,10 @@ async function adminChSubmit(e) {
   const stream1 = document.getElementById('channelStream1').value.trim();
   const stream2 = document.getElementById('channelStream2').value.trim();
   const stream3 = document.getElementById('channelStream3').value.trim();
-  const youtubeCode = document.getElementById('channelYoutubeCode').value.trim();
+  const youtubeRaw = document.getElementById('channelYoutubeCode').value.trim();
+  const youtubeCode = adminChExtractYoutubeSrc(youtubeRaw);
   const avatarUrl = document.getElementById('channelAvatarUrl').value.trim();
+  const onerrorUrl = document.getElementById('channelOnerror').value.trim();
 
   if (!name || !type) {
     adminChSetMsg('من فضلك املأ اسم القناة والقسم', 'error');
@@ -182,7 +210,7 @@ async function adminChSubmit(e) {
   }
 
   if (!stream1 && !stream2 && !stream3 && !youtubeCode) {
-    adminChSetMsg('لازم تدخل رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو رمز تضمين يوتيوب', 'error');
+    adminChSetMsg('لازم تدخل رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو كود تضمين يوتيوب', 'error');
     return;
   }
 
@@ -194,6 +222,7 @@ async function adminChSubmit(e) {
     stream3: stream3 || null,
     youtube_code: youtubeCode || null,
     avatar_url: avatarUrl || null,
+    onerror: onerrorUrl || null,
   };
 
   const submitBtn = document.getElementById('channelSubmitBtn');
@@ -213,7 +242,8 @@ async function adminChSubmit(e) {
     adminChResetForm();
   } catch (err) {
     console.error('Admin channel save error:', err);
-    adminChSetMsg('حدث خطأ أثناء الحفظ، تأكد من صحة البيانات وحاول مرة أخرى', 'error');
+    const detail = err?.message ? `: ${err.message}` : '';
+    adminChSetMsg(`حدث خطأ أثناء الحفظ${detail}`, 'error');
   } finally {
     submitBtn.disabled = false;
   }

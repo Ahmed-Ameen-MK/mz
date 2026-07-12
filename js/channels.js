@@ -68,7 +68,7 @@ function chRenderGrid() {
 
   grid.innerHTML = list.map((c, i) => `
     <button type="button" class="ch-card reveal-scale ${chActivePlayingId === String(c.id) ? 'is-playing' : ''}" style="--i:${i % 8}" data-id="${c.id}">
-      <img src="${chEsc(c.avatar_url) || CH_DEFAULT_AVATAR}" alt="${chEsc(c.channel)}" loading="lazy" onerror="this.src='${CH_DEFAULT_AVATAR}'">
+      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || CH_DEFAULT_AVATAR}" alt="${chEsc(c.channel)}" loading="lazy" onerror="chImgFallback(this, '${chEsc(c.onerror)}')">
       <span class="ch-card__name">${chEsc(c.channel)}</span>
       <span class="ch-card__type">${chEsc(c.type)}</span>
     </button>
@@ -79,14 +79,26 @@ function chRenderGrid() {
   });
 }
 
-// يبني قائمة مصادر البث المتاحة للقناة بالترتيب: بث1، بث2، بث3، ثم كود يوتيوب
+// يبني قائمة مصادر البث المتاحة للقناة بالترتيب: بث1، بث2، بث3، ثم يوتيوب
+// youtube_code هنا رابط embed كامل جاهز (اتحفظ كده من صفحة الأدمن)
 function chBuildSources(ch) {
   const sources = [];
   if (ch.stream1) sources.push({ label: 'بث 1', url: ch.stream1 });
   if (ch.stream2) sources.push({ label: 'بث 2', url: ch.stream2 });
   if (ch.stream3) sources.push({ label: 'بث 3', url: ch.stream3 });
-  if (ch.youtube_code) sources.push({ label: 'بث', url: `https://www.youtube.com/embed/${ch.youtube_code}` });
+  if (ch.youtube_code) sources.push({ label: 'بث', url: ch.youtube_code });
   return sources;
+}
+
+// أيقونة القناة الأساسية → عمود onerror الاحتياطي → صورة افتراضية
+function chImgFallback(imgEl, fallbackUrl) {
+  if (fallbackUrl && imgEl.src !== fallbackUrl) {
+    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = CH_DEFAULT_AVATAR; };
+    imgEl.src = fallbackUrl;
+  } else {
+    imgEl.onerror = null;
+    imgEl.src = CH_DEFAULT_AVATAR;
+  }
 }
 
 function chSetPlayerSource(url) {

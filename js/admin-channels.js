@@ -5,7 +5,13 @@
 // ===========================================================
 
 const ADMIN_CH_PRESET_TYPES = ['دوريات كبرى', 'مصري', 'إماراتي', 'قطري', 'سعودي'];
-const ADMIN_CH_DEFAULT_AVATAR = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="%2316131b"/><text x="50%25" y="58%25" font-size="16" fill="%23a79fb3" text-anchor="middle" font-family="sans-serif">📡</text></svg>';
+
+// أيقونة افتراضية بأول حرف من اسم القناة، بخلفية بنفسجية واضحة
+function adminChDefaultAvatar(name) {
+  const letter = (name || '?').trim().charAt(0).toUpperCase() || '?';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#2a1f47"/><text x="50%" y="54%" font-size="18" fill="#c084fc" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-weight="700">${letter}</text></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
 
 let adminChChannels = [];
 let adminChEditingId = null;
@@ -81,14 +87,14 @@ function adminChSourcesBadges(c) {
   return badges.map(b => `<span class="badge" style="margin-inline-end:.35rem;">${b}</span>`).join('');
 }
 
-// أيقونة القناة الأساسية → عمود onerror الاحتياطي → صورة افتراضية
-function adminChImgFallback(imgEl, fallbackUrl) {
+// أيقونة القناة الأساسية → عمود onerror الاحتياطي → أيقونة الحرف الافتراضية
+function adminChImgFallback(imgEl, fallbackUrl, defaultUrl) {
   if (fallbackUrl && imgEl.src !== fallbackUrl) {
-    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = ADMIN_CH_DEFAULT_AVATAR; };
+    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = defaultUrl; };
     imgEl.src = fallbackUrl;
   } else {
     imgEl.onerror = null;
-    imgEl.src = ADMIN_CH_DEFAULT_AVATAR;
+    imgEl.src = defaultUrl;
   }
 }
 
@@ -120,7 +126,7 @@ function adminChRenderTable() {
 
   tbody.innerHTML = adminChChannels.map(c => `
     <tr>
-      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || adminChEsc(c.onerror) || ADMIN_CH_DEFAULT_AVATAR}" alt="${adminChEsc(c.channel)}" onerror="adminChImgFallback(this, '${adminChEsc(c.onerror)}')"></td>
+      <td><img class="admin-table__avatar" src="${adminChEsc(c.avatar_url) || adminChEsc(c.onerror) || adminChDefaultAvatar(c.channel)}" alt="${adminChEsc(c.channel)}" onerror="adminChImgFallback(this, '${adminChEsc(c.onerror)}', '${adminChEsc(adminChDefaultAvatar(c.channel))}')"></td>
       <td>${adminChEsc(c.channel)}</td>
       <td><span class="badge">${adminChEsc(c.type)}</span></td>
       <td>${adminChSourcesBadges(c)}</td>

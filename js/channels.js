@@ -5,7 +5,13 @@
 // بين المصادر المتاحة (بث 1 / بث 2 / بث 3 / بث يوتيوب).
 // ===========================================================
 
-const CH_DEFAULT_AVATAR = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="%2316131b"/><text x="50%25" y="58%25" font-size="16" fill="%23a79fb3" text-anchor="middle" font-family="sans-serif">📡</text></svg>';
+// أيقونة افتراضية بأول حرف من اسم القناة، بخلفية بنفسجية واضحة
+// (encodeURIComponent يضمن التوافق مع الأحرف العربية في كل المتصفحات)
+function chDefaultAvatar(name) {
+  const letter = (name || '?').trim().charAt(0).toUpperCase() || '?';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#2a1f47"/><text x="50%" y="54%" font-size="18" fill="#c084fc" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-weight="700">${letter}</text></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
 
 let chAllChannels = [];
 let chActiveType = 'all';
@@ -68,7 +74,7 @@ function chRenderGrid() {
 
   grid.innerHTML = list.map((c, i) => `
     <button type="button" class="ch-card reveal-scale ${chActivePlayingId === String(c.id) ? 'is-playing' : ''}" style="--i:${i % 8}" data-id="${c.id}">
-      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || CH_DEFAULT_AVATAR}" alt="${chEsc(c.channel)}" loading="lazy" onerror="chImgFallback(this, '${chEsc(c.onerror)}')">
+      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || chDefaultAvatar(c.channel)}" alt="${chEsc(c.channel)}" loading="lazy" onerror="chImgFallback(this, '${chEsc(c.onerror)}', '${chEsc(chDefaultAvatar(c.channel))}')">
       <span class="ch-card__name">${chEsc(c.channel)}</span>
       <span class="ch-card__type">${chEsc(c.type)}</span>
     </button>
@@ -90,21 +96,21 @@ function chBuildSources(ch) {
   return sources;
 }
 
-// أيقونة القناة الأساسية → عمود onerror الاحتياطي → صورة افتراضية
-function chImgFallback(imgEl, fallbackUrl) {
+// أيقونة القناة الأساسية → عمود onerror الاحتياطي → أيقونة الحرف الافتراضية
+function chImgFallback(imgEl, fallbackUrl, defaultUrl) {
   if (fallbackUrl && imgEl.src !== fallbackUrl) {
-    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = CH_DEFAULT_AVATAR; };
+    imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = defaultUrl; };
     imgEl.src = fallbackUrl;
   } else {
     imgEl.onerror = null;
-    imgEl.src = CH_DEFAULT_AVATAR;
+    imgEl.src = defaultUrl;
   }
 }
 
 function chSetPlayerSource(url) {
   const playerWrap = document.getElementById('channelPlayer');
   if (!playerWrap) return;
-  playerWrap.innerHTML = `<iframe src="${chEsc(url)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
+  playerWrap.innerHTML = `<iframe src="${chEsc(url)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 }
 
 function chPlayChannel(id) {

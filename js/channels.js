@@ -9,7 +9,7 @@
 // (encodeURIComponent يضمن التوافق مع الأحرف العربية في كل المتصفحات)
 function chDefaultAvatar(name) {
   const letter = (name || '?').trim().charAt(0).toUpperCase() || '?';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><text x="50%" y="54%" font-size="20" fill="#7c3aed" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-weight="700">${letter}</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#2a1f47"/><text x="50%" y="54%" font-size="18" fill="#c084fc" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-weight="700">${letter}</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
@@ -74,7 +74,7 @@ function chRenderGrid() {
 
   grid.innerHTML = list.map((c, i) => `
     <button type="button" class="ch-card reveal-scale ${chActivePlayingId === String(c.id) ? 'is-playing' : ''}" style="--i:${i % 8}" data-id="${c.id}">
-      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || chDefaultAvatar(c.channel)}" alt="${chEsc(c.channel)}" loading="lazy" referrerpolicy="no-referrer" onerror="chImgFallback(this, '${chEsc(c.onerror)}', '${chEsc(chDefaultAvatar(c.channel))}')">
+      <img src="${chEsc(c.avatar_url) || chEsc(c.onerror) || chDefaultAvatar(c.channel)}" alt="${chEsc(c.channel)}" loading="lazy" onerror="chImgFallback(this, '${chEsc(c.onerror)}', '${chEsc(chDefaultAvatar(c.channel))}')">
       <span class="ch-card__name">${chEsc(c.channel)}</span>
       <span class="ch-card__type">${chEsc(c.type)}</span>
     </button>

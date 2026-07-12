@@ -95,7 +95,7 @@ function chPlayChannel(id) {
   const typeEl = document.getElementById('channelPlayerType');
   if (!playerWrap) return;
 
-  playerWrap.innerHTML = `<iframe src="${chEsc(ch.stream_url)}" data-channel-id="${chEsc(ch.id)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>`;
+  playerWrap.innerHTML = `<iframe src="${chEsc(ch.stream_url)}" data-channel-id="${chEsc(ch.id)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
   if (nameEl) nameEl.textContent = ch.channel;
   if (typeEl) typeEl.textContent = ch.type;
 

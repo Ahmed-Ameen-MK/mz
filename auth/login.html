@@ -6,143 +6,80 @@
 <title>تسجيل الدخول — MZ TV</title>
 <link rel="icon" href="../icon.png" type="image/png">
 <link rel="stylesheet" href="../css/style.css">
-<style>
-  .auth-wrap{
-    min-height: calc(100vh - 60px);
-    display:flex; align-items:center; justify-content:center;
-    padding: 3rem 1.5rem;
-    position:relative; overflow:hidden;
-  }
-  .auth-wrap::before{
-    content:""; position:absolute; inset:0; z-index:0;
-    background: radial-gradient(circle at 20% 20%, rgba(124,58,237,.18), transparent 45%),
-                radial-gradient(circle at 85% 80%, rgba(168,85,247,.14), transparent 50%);
-  }
-  .auth-card{
-    position:relative; z-index:1;
-    width:100%; max-width: 420px;
-    background: var(--bg-card);
-    border:1px solid var(--border);
-    padding: 2.6rem;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%);
-  }
-  .auth-card h1{ font-family: var(--font-display); font-size:1.9rem; margin-bottom:.4rem; }
-  .auth-card p.sub{ color: var(--text-dim); font-size:.9rem; margin-bottom:2rem; }
-  .field{ margin-bottom: 1.2rem; }
-  .field label{ display:block; font-size:.85rem; font-weight:700; margin-bottom:.5rem; color: var(--text-dim); }
-  .field input{
-    width:100%; padding:.8rem 1rem;
-    background: var(--bg-elevated); border:1px solid var(--border); color: var(--text);
-    border-radius: var(--radius);
-    transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
-  }
-  .field input:focus{ outline:none; border-color: var(--purple-bright); box-shadow: 0 0 0 3px rgba(124,58,237,.2); }
-  .field-row{ display:flex; justify-content:space-between; align-items:center; font-size:.85rem; margin-bottom:1.6rem; }
-  .field-row a{ color: var(--purple-bright); }
-  .check{ display:flex; align-items:center; gap:.5rem; color: var(--text-dim); }
-  .divider{ display:flex; align-items:center; gap:1rem; margin:1.8rem 0; color: var(--text-faint); font-size:.8rem; }
-  .divider::before, .divider::after{ content:""; flex:1; height:1px; background: var(--border); }
-  .switch{ text-align:center; margin-top:1.6rem; font-size:.9rem; color: var(--text-dim); }
-  .switch a{ color: var(--purple-bright); font-weight:700; }
-</style>
 </head>
 <body>
 
-<header class="site-header">
-  <nav class="nav">
-    <a href="../index.html" class="brand">
-      <span class="brand__mark">MZ</span>
-      <span>MZ <span class="brand__tv">TV</span></span>
-    </a>
-    <ul class="nav__links">
-      <li><a href="../index.html">الرئيسية</a></li>
-      <li><a href="../matches.html">مواعيد المباريات</a></li>
-      <li><a href="../channels/sports.html">القنوات الرياضية</a></li>
-      <li><a href="../channels/movies.html">أفلام ومسلسلات</a></li>
-    </ul>
-    <div class="nav__auth">
-      <a href="login.html" class="btn btn--ghost">تسجيل الدخول</a>
-      <a href="register.html" class="btn btn--primary">إنشاء حساب</a>
-    </div>
-    <div class="nav__account" id="navAccount">
-      <button type="button" class="nav__account-btn" id="navAccountBtn">
-        <span class="nav__account-avatar" id="navAccountAvatar">?</span>
-        <span class="nav__account-name" id="navAccountName">الحساب</span>
-      </button>
-      <div class="nav__account-menu">
-        <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
-      </div>
-    </div>
-    <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
-  </nav>
-</header>
+<div class="split-auth">
+  <div class="split-auth__form">
+    <div class="auth-card2 reveal-scale is-visible">
+      <a href="../index.html" class="brand" style="margin-bottom:2rem; display:flex;">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </a>
+      <span class="eyebrow">◆ مرحبًا بعودتك</span>
+      <h1>تسجيل الدخول</h1>
+      <p class="sub">سجّل الدخول بحساب جوجل في ثوانٍ لمتابعة فرقك المفضلة وحفظ إعداداتك.</p>
 
-<div class="auth-wrap">
-  <div class="auth-card reveal-scale is-visible">
-    <span class="eyebrow" style="margin-bottom:1.2rem;">◆ مرحبًا بعودتك</span>
-    <h1>تسجيل الدخول</h1>
-    <p class="sub">سجّل الدخول لمتابعة فرقك المفضلة وحفظ إعداداتك.</p>
-
-    <form id="loginForm">
-      <div class="field">
-        <label for="email">البريد الإلكتروني</label>
-        <input type="email" id="email" placeholder="example@email.com" required>
-      </div>
-      <div class="field">
-        <label for="password">كلمة المرور</label>
-        <input type="password" id="password" placeholder="••••••••" required>
-      </div>
-      <div class="field-row">
-        <label class="check"><input type="checkbox" style="width:auto;"> تذكرني</label>
-        <a href="#">نسيت كلمة المرور؟</a>
-      </div>
       <p class="form-msg" id="loginMsg"></p>
-      <button type="submit" class="btn btn--primary btn--block" id="loginSubmitBtn">تسجيل الدخول</button>
-    </form>
 
-    <div class="divider">أو</div>
+      <button class="btn btn--google" type="button" id="googleLoginBtn">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+        </svg>
+        <span id="googleLoginLabel">المتابعة عبر جوجل</span>
+      </button>
 
-    <button class="btn btn--ghost btn--block" type="button" id="googleLoginBtn">المتابعة عبر جوجل</button>
+      <p class="switch">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
+    </div>
+  </div>
 
-    <p class="switch">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
+  <div class="split-auth__visual" aria-hidden="true">
+    <img src="../bgs/login.png" alt="">
+    <div class="split-auth__caption">
+      <div class="split-auth__brand">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </div>
+      <div class="split-auth__marquee">
+        <div class="split-auth__marquee-track">
+          <span>شاهد MZ TV</span>
+          <span>كل المباريات في مكان واحد</span>
+          <span>القنوات الفضائية</span>
+          <span>أفلام</span>
+          <span>مسلسلات</span>
+          <span>شاهد MZ TV</span>
+          <span>كل المباريات في مكان واحد</span>
+          <span>القنوات الفضائية</span>
+          <span>أفلام</span>
+          <span>مسلسلات</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase-client.js"></script>
 <script src="../js/auth.js"></script>
-<script src="../js/main.js"></script>
 <script>
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  document.getElementById('googleLoginBtn').addEventListener('click', async () => {
     const msg = document.getElementById('loginMsg');
-    const btn = document.getElementById('loginSubmitBtn');
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
+    const btn = document.getElementById('googleLoginBtn');
+    const label = document.getElementById('googleLoginLabel');
     msg.textContent = '';
     msg.className = 'form-msg';
     btn.disabled = true;
-    btn.textContent = 'جارِ الدخول...';
-
-    try {
-      await mzAuth.login(email, password);
-      window.location.href = '../index.html';
-    } catch (err) {
-      msg.textContent = mzFriendlyAuthError(err);
-      msg.className = 'form-msg form-msg--error';
-      btn.disabled = false;
-      btn.textContent = 'تسجيل الدخول';
-    }
-  });
-
-  document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-    const msg = document.getElementById('loginMsg');
+    label.textContent = 'جارِ التحويل إلى جوجل...';
     try {
       await mzAuth.loginWithGoogle();
     } catch (err) {
       msg.textContent = 'تعذّر بدء تسجيل الدخول عبر جوجل';
       msg.className = 'form-msg form-msg--error';
+      btn.disabled = false;
+      label.textContent = 'المتابعة عبر جوجل';
     }
   });
 </script>

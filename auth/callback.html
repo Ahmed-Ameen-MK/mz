@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جارِ إتمام تسجيل الدخول — MZ TV</title>
+<link rel="icon" href="../icon.png" type="image/png">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="split-auth">
+  <div class="split-auth__form">
+
+    <!-- State: loading -->
+    <div class="auth-card2" id="stateLoading">
+      <a href="../index.html" class="brand" style="margin-bottom:2rem; display:flex;">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </a>
+      <div class="auth-loading">
+        <div class="auth-spinner"></div>
+        <p id="loadingText">جارِ إتمام تسجيل الدخول عبر جوجل...</p>
+      </div>
+    </div>
+
+    <!-- State: error -->
+    <div class="auth-card2" id="stateError" style="display:none;">
+      <span class="eyebrow">◆ حدث خطأ</span>
+      <h1>لم نتمكن من إتمام العملية</h1>
+      <p class="sub" id="errorText">حدث خطأ غير متوقع، حاول مرة أخرى.</p>
+      <a href="login.html" class="btn btn--primary btn--block">العودة لتسجيل الدخول</a>
+    </div>
+
+    <!-- State: step 2 (finish profile) -->
+    <div class="auth-card2" id="stateStep2" style="display:none;">
+      <a href="../index.html" class="brand" style="margin-bottom:1.6rem; display:flex;">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </a>
+      <span class="eyebrow">◆ خطوة أخيرة</span>
+      <h1>أكمل بياناتك</h1>
+      <p class="sub">مرحبًا <strong id="step2Name" style="color:var(--text);"></strong>، بقيت خطوة بسيطة لإكمال حسابك.</p>
+
+      <form id="step2Form">
+        <div class="field">
+          <label>الدولة</label>
+          <div class="country-picker" id="countryPicker">
+            <div class="country-picker__input" id="countryPickerInput" tabindex="0">
+              <span id="countryPickerLabel" class="ph">اختر الدولة</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="country-picker__panel">
+              <div class="country-picker__search">
+                <input type="text" id="countrySearch" placeholder="ابحث عن دولة...">
+              </div>
+              <div class="country-picker__list" id="countryList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="city">المدينة</label>
+          <input type="text" id="city" placeholder="مثال: القاهرة" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">رقم الهاتف</label>
+          <div class="phone-field">
+            <span class="phone-field__code" id="phoneCode">+</span>
+            <input type="tel" id="phone" placeholder="رقم الهاتف" required style="flex:1;">
+          </div>
+        </div>
+
+        <p class="form-msg" id="step2Msg"></p>
+        <button type="submit" class="btn btn--primary btn--block" id="step2SubmitBtn">إتمام التسجيل</button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="split-auth__visual" aria-hidden="true">
+    <img src="../bgs/register.png" alt="">
+    <div class="split-auth__caption">
+      <div class="split-auth__brand">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </div>
+      <div class="split-auth__marquee">
+        <div class="split-auth__marquee-track">
+          <span>شاهد MZ TV</span>
+          <span>كل المباريات في مكان واحد</span>
+          <span>القنوات الفضائية</span>
+          <span>أفلام</span>
+          <span>مسلسلات</span>
+          <span>شاهد MZ TV</span>
+          <span>كل المباريات في مكان واحد</span>
+          <span>القنوات الفضائية</span>
+          <span>أفلام</span>
+          <span>مسلسلات</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/countries.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+(function () {
+  const stateLoading = document.getElementById('stateLoading');
+  const stateError = document.getElementById('stateError');
+  const stateStep2 = document.getElementById('stateStep2');
+  const errorText = document.getElementById('errorText');
+  const loadingText = document.getElementById('loadingText');
+
+  function showState(name) {
+    stateLoading.style.display = name === 'loading' ? '' : 'none';
+    stateError.style.display = name === 'error' ? '' : 'none';
+    stateStep2.style.display = name === 'step2' ? '' : 'none';
+  }
+
+  function showError(msg) {
+    errorText.textContent = msg;
+    showState('error');
+  }
+
+  /* ---------- Country picker widget ---------- */
+  let selectedCountry = null;
+  const picker = document.getElementById('countryPicker');
+  const pickerInput = document.getElementById('countryPickerInput');
+  const pickerLabel = document.getElementById('countryPickerLabel');
+  const searchInput = document.getElementById('countrySearch');
+  const listEl = document.getElementById('countryList');
+  const phoneCodeEl = document.getElementById('phoneCode');
+  const phoneInput = document.getElementById('phone');
+
+  function renderCountryList(filter) {
+    const all = mzSortedCountries();
+    const q = (filter || '').trim();
+    const filtered = q ? all.filter(c => c.ar.includes(q) || c.dial.includes(q)) : all;
+
+    listEl.innerHTML = '';
+    if (!filtered.length) {
+      listEl.innerHTML = '<div class="country-picker__empty">لا توجد نتائج</div>';
+      return;
+    }
+
+    let lastGroup = null;
+    filtered.forEach(c => {
+      const group = c.arab ? 'الدول العربية' : 'كل الدول';
+      if (!q && group !== lastGroup) {
+        const label = document.createElement('div');
+        label.className = 'country-picker__group-label';
+        label.textContent = group;
+        listEl.appendChild(label);
+        lastGroup = group;
+      }
+      const item = document.createElement('div');
+      item.className = 'country-picker__item';
+      item.innerHTML = `<span>${c.ar}</span><small>${c.dial}</small>`;
+      item.addEventListener('click', () => selectCountry(c));
+      listEl.appendChild(item);
+    });
+  }
+
+  function selectCountry(c) {
+    selectedCountry = c;
+    pickerLabel.textContent = c.ar;
+    pickerLabel.classList.remove('ph');
+    phoneCodeEl.textContent = c.dial;
+    picker.classList.remove('is-open');
+    // prefill the phone field with the dial code if it's currently empty
+    if (!phoneInput.value.trim()) phoneInput.value = '';
+  }
+
+  pickerInput.addEventListener('click', () => {
+    picker.classList.toggle('is-open');
+    if (picker.classList.contains('is-open')) {
+      searchInput.value = '';
+      renderCountryList('');
+      setTimeout(() => searchInput.focus(), 10);
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!picker.contains(e.target)) picker.classList.remove('is-open');
+  });
+  searchInput.addEventListener('input', () => renderCountryList(searchInput.value));
+  renderCountryList('');
+
+  /* ---------- Main flow ---------- */
+  document.addEventListener('DOMContentLoaded', async () => {
+    let session;
+    try {
+      const res = await supabaseClient.auth.getSession();
+      session = res.data.session;
+      // Sometimes the OAuth redirect needs a tick to be processed by the SDK.
+      if (!session) {
+        await new Promise(r => setTimeout(r, 700));
+        const res2 = await supabaseClient.auth.getSession();
+        session = res2.data.session;
+      }
+    } catch (err) {
+      showError('تعذّر التحقق من جلسة الدخول.');
+      return;
+    }
+
+    if (!session) {
+      showError('تعذّر إتمام تسجيل الدخول عبر جوجل. حاول مرة أخرى.');
+      return;
+    }
+
+    const user = session.user;
+    const googleName = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
+    const googleEmail = user.email;
+
+    let profile = null;
+    try {
+      profile = await mzFetchProfile(user.id);
+    } catch (err) {
+      showError('تعذّر تحميل بيانات الحساب.');
+      return;
+    }
+
+    if (mzProfileIsComplete(profile)) {
+      mzSetStoredUser({ id: user.id, email: profile.email || googleEmail, name: profile.name || googleName });
+      window.location.replace('../index.html');
+      return;
+    }
+
+    // New Google sign-up, or an existing row missing country/city/phone —
+    // show step 2 to finish the profile.
+    document.getElementById('step2Name').textContent = googleName;
+    showState('step2');
+
+    document.getElementById('step2Form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('step2Msg');
+      const btn = document.getElementById('step2SubmitBtn');
+      msg.textContent = '';
+      msg.className = 'form-msg';
+
+      const city = document.getElementById('city').value.trim();
+      const phoneLocal = phoneInput.value.trim();
+
+      if (!selectedCountry) {
+        msg.textContent = 'الرجاء اختيار الدولة';
+        msg.className = 'form-msg form-msg--error';
+        return;
+      }
+      if (!city) {
+        msg.textContent = 'الرجاء إدخال المدينة';
+        msg.className = 'form-msg form-msg--error';
+        return;
+      }
+      if (!phoneLocal) {
+        msg.textContent = 'الرجاء إدخال رقم الهاتف';
+        msg.className = 'form-msg form-msg--error';
+        return;
+      }
+
+      const fullPhone = `${selectedCountry.dial} ${phoneLocal}`.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'جارِ الحفظ...';
+
+      try {
+        const dupMsg = await mzCheckDuplicateProfile(
+          { email: googleEmail, name: googleName, phone: fullPhone },
+          user.id
+        );
+        if (dupMsg) {
+          msg.textContent = dupMsg;
+          msg.className = 'form-msg form-msg--error';
+          btn.disabled = false;
+          btn.textContent = 'إتمام التسجيل';
+          return;
+        }
+
+        const row = {
+          id: user.id,
+          name: googleName,
+          email: googleEmail,
+          country: selectedCountry.ar,
+          city,
+          phone: fullPhone,
+        };
+
+        const { error } = profile
+          ? await supabaseClient.from('users').update(row).eq('id', user.id)
+          : await supabaseClient.from('users').insert([row]);
+
+        if (error) throw error;
+
+        mzSetStoredUser({ id: user.id, email: googleEmail, name: googleName });
+        window.location.replace('../index.html');
+      } catch (err) {
+        msg.textContent = mzFriendlyAuthError(err);
+        msg.className = 'form-msg form-msg--error';
+        btn.disabled = false;
+        btn.textContent = 'إتمام التسجيل';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

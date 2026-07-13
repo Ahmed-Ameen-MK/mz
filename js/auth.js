@@ -95,8 +95,10 @@ async function mzFetchProfile(userId) {
     .select('id, name, email, country, city, phone')
     .eq('id', userId)
     .maybeSingle();
-  if (error) throw error;
-  return data;
+  // PGRST116 = "no rows found" — that's a normal case for a brand-new
+  // user, not a real error, so don't throw for it.
+  if (error && error.code !== 'PGRST116') throw error;
+  return data || null;
 }
 
 // A profile is "complete" once country/city/phone have been filled in

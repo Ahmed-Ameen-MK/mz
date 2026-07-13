@@ -592,3 +592,142 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 @media (max-width: 640px){
   .admin-table th, .admin-table td{ white-space:normal; }
 }
+
+/* =================== AUTH GUARD (prevents home-page flash) =================== */
+html.mz-auth-checking body{ visibility:hidden; }
+
+/* =================== SPLIT AUTH LAYOUT (login / register) =================== */
+.split-auth{
+  min-height: 100vh;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+}
+.split-auth__form{
+  display:flex; align-items:center; justify-content:center;
+  padding: 3rem 1.75rem;
+  position:relative; overflow:hidden;
+}
+.split-auth__form::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background: radial-gradient(circle at 25% 20%, rgba(124,58,237,.16), transparent 45%),
+              radial-gradient(circle at 80% 85%, rgba(168,85,247,.12), transparent 50%);
+}
+.split-auth__visual{
+  position:relative; overflow:hidden;
+  background: #000;
+}
+.split-auth__visual img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.72;
+}
+.split-auth__visual::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(8,8,11,.15), rgba(8,8,11,.9) 88%),
+              linear-gradient(90deg, rgba(8,8,11,.55), transparent 30%);
+}
+.split-auth__caption{
+  position:absolute; right:0; bottom:0; left:0; z-index:2;
+  padding: 2.4rem 2.2rem;
+}
+.split-auth__brand{
+  display:flex; align-items:center; gap:.6rem;
+  font-family: var(--font-display); font-size:1.5rem; margin-bottom:1.1rem;
+}
+.split-auth__marquee{
+  overflow:hidden; white-space:nowrap; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.split-auth__marquee-track{
+  display:inline-flex; gap:2.4rem;
+  font-family: var(--font-data); font-weight:700; font-size:1rem; color: var(--text);
+  animation: ticker-scroll 22s linear infinite;
+  width:max-content;
+}
+.split-auth__marquee-track span{ display:flex; align-items:center; gap:.6rem; color: var(--purple-glow); }
+.split-auth__marquee-track span::before{ content:"◆"; font-size:.7rem; color: var(--text-faint); }
+
+@media (max-width: 900px){
+  .split-auth{ grid-template-columns: 1fr; }
+  .split-auth__visual{ display:none; }
+}
+
+.auth-card2{
+  position:relative; z-index:1; width:100%; max-width: 440px;
+}
+.auth-card2 .eyebrow{ margin-bottom:1.2rem; }
+.auth-card2 h1{ font-family: var(--font-display); font-size:2rem; margin-bottom:.5rem; }
+.auth-card2 p.sub{ color: var(--text-dim); font-size:.92rem; margin-bottom:2.2rem; line-height:1.7; }
+
+.btn--google{
+  display:flex; align-items:center; justify-content:center; gap:.7rem;
+  width:100%; padding: .85rem 1.4rem;
+  background: #fff; color:#1f1f1f; border:1px solid transparent;
+  font-weight:700; font-size:.95rem;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.btn--google:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px -8px rgba(255,255,255,.35); }
+.btn--google svg{ width:20px; height:20px; flex-shrink:0; }
+
+.auth-step2{ display:none; }
+.auth-step2.is-active{ display:block; }
+.auth-step1.is-hidden{ display:none; }
+
+.auth-loading{
+  display:flex; flex-direction:column; align-items:center; gap:1rem;
+  color: var(--text-dim); font-size:.9rem; text-align:center; padding: 2rem 0;
+}
+.auth-spinner{
+  width:34px; height:34px; border-radius:50%;
+  border:3px solid var(--border); border-top-color: var(--purple-bright);
+  animation: mz-spin .8s linear infinite;
+}
+@keyframes mz-spin{ to{ transform: rotate(360deg); } }
+
+/* ---------- Country picker ---------- */
+.country-picker{ position:relative; }
+.country-picker__input{
+  width:100%; padding:.8rem 1rem;
+  background: var(--bg-elevated); border:1px solid var(--border); color: var(--text);
+  cursor:pointer; text-align:right; display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+}
+.country-picker__input span.ph{ color: var(--text-faint); }
+.country-picker__input .arrow{ color: var(--text-faint); transition: transform .2s var(--ease); font-size:.75rem; }
+.country-picker.is-open .country-picker__input .arrow{ transform: rotate(180deg); }
+.country-picker__input:hover{ border-color: var(--purple-bright); }
+
+.country-picker__panel{
+  display:none;
+  position:absolute; top:calc(100% + 6px); right:0; left:0; z-index:70;
+  background: var(--bg-elevated); border:1px solid var(--border);
+  max-height:280px; display:none; flex-direction:column;
+  box-shadow: 0 20px 40px -16px rgba(0,0,0,.7);
+}
+.country-picker.is-open .country-picker__panel{ display:flex; }
+.country-picker__search{
+  padding:.6rem; border-bottom:1px solid var(--border-soft);
+}
+.country-picker__search input{
+  width:100%; padding:.55rem .8rem;
+  background: var(--bg-card); border:1px solid var(--border); color: var(--text);
+}
+.country-picker__list{ overflow-y:auto; }
+.country-picker__group-label{
+  padding:.5rem .9rem; font-size:.72rem; color: var(--text-faint);
+  font-family: var(--font-data); font-weight:700; letter-spacing:.05em;
+  background: var(--bg-card);
+}
+.country-picker__item{
+  display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+  padding:.6rem .9rem; cursor:pointer; font-size:.9rem;
+}
+.country-picker__item:hover, .country-picker__item.is-active{ background: var(--bg-card); color: var(--purple-glow); }
+.country-picker__item small{ color: var(--text-faint); font-family: var(--font-data); }
+.country-picker__empty{ padding:1rem; text-align:center; color: var(--text-faint); font-size:.85rem; }
+
+.phone-field{ display:flex; }
+.phone-field__code{
+  display:flex; align-items:center; justify-content:center;
+  padding:0 .9rem; background: var(--bg-elevated); border:1px solid var(--border); border-inline-start:0;
+  color: var(--text-dim); font-family: var(--font-data); font-weight:700; font-size:.88rem; white-space:nowrap;
+}
+.phone-field input{ border-inline-end:0 !important; }

@@ -731,3 +731,72 @@ html.mz-auth-checking body{ visibility:hidden; }
   color: var(--text-dim); font-family: var(--font-data); font-weight:700; font-size:.88rem; white-space:nowrap;
 }
 .phone-field input{ border-inline-end:0 !important; }
+
+/* =================== MATCHES PAGE — DAY TABS =================== */
+.day-tabs{
+  display:flex; gap:.7rem; flex-wrap:wrap; margin-bottom:2.8rem;
+}
+.day-tab{
+  padding:.62rem 1.5rem;
+  border:1px solid var(--border);
+  background:transparent; color:var(--text-dim);
+  font-family:inherit; font-weight:700; font-size:.9rem;
+  cursor:pointer;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
+}
+.day-tab:hover{ border-color: var(--purple-bright); color: var(--text); }
+.day-tab.is-active{
+  background: linear-gradient(135deg, var(--purple-bright), var(--purple-deep));
+  border-color: transparent; color:#fff;
+  box-shadow: 0 8px 24px -8px rgba(124,58,237,.6);
+}
+
+/* =================== MATCHES PAGE — LEAGUE GROUPS =================== */
+.league-group{ margin-bottom: 3.2rem; }
+.league-group:last-child{ margin-bottom:0; }
+.league-group__head{
+  display:flex; align-items:center; gap:.7rem;
+  margin-bottom: 1.3rem; padding-bottom:.9rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.league-group__logo{ width:26px; height:26px; object-fit:contain; flex-shrink:0; }
+.league-group__name{ font-weight:800; font-size:1rem; }
+.league-group__country{ color: var(--text-faint); font-size:.8rem; margin-inline-start:.3rem; }
+
+/* =================== MATCH CARD =================== */
+.match-card{ display:flex; flex-direction:column; }
+.match-card__status{
+  display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+  flex-wrap:wrap;
+}
+.match-card__time{
+  font-family: var(--font-data); font-size:.78rem; color: var(--text-faint);
+  display:flex; align-items:center; flex-wrap:wrap;
+}
+.status-badge{
+  font-family: var(--font-data); font-weight:700; font-size:.72rem;
+  color: var(--text-dim); border:1px solid var(--border);
+  padding:.22rem .6rem; letter-spacing:.02em; white-space:nowrap;
+}
+.status-badge--finished{ color: var(--text-dim); border-color: var(--border); }
+.status-badge--postponed{ color:#fca5a5; border-color: rgba(239,68,68,.4); }
+.soon-badge{
+  display:inline-flex; align-items:center; gap:.3rem;
+  background: rgba(168,85,247,.12); border:1px solid var(--purple);
+  color: var(--purple-glow); font-family: var(--font-data); font-weight:700; font-size:.68rem;
+  padding:.2rem .55rem; margin-inline-start:.4rem;
+}
+.match-card__round{
+  color: var(--text-faint); font-size:.72rem; margin-top:.5rem; text-align:center;
+}
+
+/* live badge minute counter reuses .live-badge from index (dot + red) */
+.live-badge .minute{ font-variant-numeric: tabular-nums; }
+
+/* =================== MATCHES PAGE — EMPTY / ERROR STATES =================== */
+.matches__empty{ color: var(--text-dim); text-align:center; padding: 3rem 0; }
+.matches__error{
+  color:#fca5a5; text-align:center; padding: 2rem 1.5rem;
+  border:1px dashed rgba(239,68,68,.4); max-width:60ch; margin:0 auto;
+}

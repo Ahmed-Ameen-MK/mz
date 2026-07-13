@@ -24,6 +24,17 @@ function mzClearStoredUser() {
   localStorage.removeItem(MZTV_USER_KEY);
 }
 
+/* ---------- Path helpers (site can be viewed from / or /auth/) ---------- */
+function mzIsIndexPage() {
+  const p = window.location.pathname;
+  return p === '/' || p.endsWith('/index.html');
+}
+
+function mzRootPath() {
+  // when called from a page inside /auth/, we need one level up
+  return window.location.pathname.includes('/auth/') ? '../' : '';
+}
+
 /* ---------- Header UI (login/register buttons <-> account name) ---------- */
 function mzRenderAuthUI() {
   const authBox = document.querySelector('.nav__auth');
@@ -77,7 +88,7 @@ function mzFriendlyAuthError(err) {
   return 'حدث خطأ غير متوقع، حاول مرة أخرى';
 }
 
-/* ---------- Profile helper ---------- */
+/* ---------- Profile helpers ---------- */
 async function mzFetchProfile(userId) {
   const { data, error } = await supabaseClient
     .from('users')
@@ -88,46 +99,42 @@ async function mzFetchProfile(userId) {
   return data;
 }
 
-/* ---------- Public API used by login.html / register.html ---------- */
+// A profile is "complete" once country/city/phone have been filled in
+// via the step-2 form on auth/callback.html.
+function mzProfileIsComplete(profile) {
+  return !!(profile && profile.country && profile.city && profile.phone);
+}
+
+// Checks whether email / name / phone are already used by a *different*
+// user row. Returns a friendly Arabic message, or null if all clear.
+async function mzCheckDuplicateProfile({ email, name, phone }, excludeId) {
+  const orParts = [];
+  if (email) orParts.push(`email.eq.${email}`);
+  if (name) orParts.push(`name.eq.${name}`);
+  if (phone) orParts.push(`phone.eq.${phone}`);
+  if (!orParts.length) return null;
+
+  const { data, error } = await supabaseClient
+    .from('users')
+    .select('id, email, name, phone')
+    .or(orParts.join(','));
+  if (error) throw error;
+
+  const conflict = (data || []).find(row => row.id !== excludeId);
+  if (!conflict) return null;
+
+  if (email && conflict.email === email) return 'هذا البريد الإلكتروني مسجّل من قبل';
+  if (name && conflict.name === name) return 'هذا الاسم مسجّل من قبل، جرّب اسمًا مختلفًا';
+  if (phone && conflict.phone === phone) return 'رقم الهاتف هذا مسجّل من قبل';
+  return 'هذه البيانات مسجّلة من قبل';
+}
+
+/* ---------- Public API used across auth pages ---------- */
 const mzAuth = {
-  async login(email, password) {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-
-    let profile = null;
-    try { profile = await mzFetchProfile(data.user.id); } catch { /* ignore, fall back below */ }
-
-    mzSetStoredUser({
-      id: data.user.id,
-      email: data.user.email,
-      name: profile?.name || data.user.email,
-    });
-    return data.user;
-  },
-
-  async register({ name, email, password, country, city, phone }) {
-    const { data, error } = await supabaseClient.auth.signUp({ email, password });
-    if (error) throw error;
-
-    // If email confirmation is required, data.user exists but there's no session yet.
-    if (data.user) {
-      const { error: insertError } = await supabaseClient
-        .from('users')
-        .insert([{ id: data.user.id, name, email, country: country || null, city: city || null, phone: phone || null }]);
-      if (insertError) throw insertError;
-    }
-
-    if (data.session) {
-      mzSetStoredUser({ id: data.user.id, email: data.user.email, name });
-    }
-
-    return data;
-  },
-
   async loginWithGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/index.html' },
+      options: { redirectTo: window.location.origin + mzRootPath() + 'auth/callback.html' },
     });
     if (error) throw error;
   },
@@ -136,39 +143,26 @@ const mzAuth = {
     await supabaseClient.auth.signOut();
     mzClearStoredUser();
     mzRenderAuthUI();
-    window.location.href = '/index.html';
+    window.location.href = mzRootPath() + 'index.html';
   },
 };
 
-/* ---------- On every page load: sync UI + handle OAuth return ---------- */
+/* ---------- On every page load: sync UI + guard the homepage ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
   mzRenderAuthUI();
   mzWireAccountMenu();
 
-  // Catch the session created by a Google OAuth redirect and make sure
-  // a matching row exists in public.users, then sync the header.
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session && !mzGetStoredUser()) {
-    const user = session.user;
-    let profile = null;
-    try { profile = await mzFetchProfile(user.id); } catch { /* ignore */ }
-
-    if (!profile) {
-      const fallbackName = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
-      try {
-        await supabaseClient.from('users').insert([{
-          id: user.id,
-          name: fallbackName,
-          email: user.email,
-          country: null,
-          city: null,
-          phone: null,
-        }]);
-        profile = { name: fallbackName };
-      } catch { /* row may already exist from a race — ignore */ }
+  // index.html is only for logged-in visitors — bounce guests to login.
+  if (mzIsIndexPage()) {
+    let user = mzGetStoredUser();
+    if (!user) {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.replace('auth/login.html');
+        return;
+      }
     }
-
-    mzSetStoredUser({ id: user.id, email: user.email, name: profile?.name || user.email });
-    mzRenderAuthUI();
   }
+
+  document.documentElement.classList.remove('mz-auth-checking');
 });

@@ -216,12 +216,15 @@
     const googleName = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
     const googleEmail = user.email;
 
+    // A brand-new Google sign-up has no row in public.users yet — that's
+    // expected, not an error. Only bail out on a real fetch failure that
+    // isn't "no rows found".
     let profile = null;
     try {
       profile = await mzFetchProfile(user.id);
     } catch (err) {
-      showError('تعذّر تحميل بيانات الحساب.');
-      return;
+      console.warn('mzFetchProfile failed, treating as new profile:', err);
+      profile = null;
     }
 
     if (mzProfileIsComplete(profile)) {

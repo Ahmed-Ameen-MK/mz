@@ -88,6 +88,27 @@ function mzFriendlyAuthError(err) {
   return 'حدث خطأ غير متوقع، حاول مرة أخرى';
 }
 
+// Covers failures from inserting/updating public.users (RLS, constraints...)
+// as opposed to Supabase Auth errors above.
+function mzFriendlyDbError(err) {
+  const m = (err && err.message) || '';
+  const code = err && err.code;
+  if (code === '42501' || /row-level security/i.test(m)) {
+    return 'ليس لديك صلاحية لحفظ هذه البيانات (تحقق من سياسات RLS في جدول users)';
+  }
+  if (code === '23505' || /duplicate key value/i.test(m)) {
+    return 'هذه البيانات (البريد أو الاسم أو الهاتف) مسجّلة من قبل';
+  }
+  if (code === '23502' || /null value in column/i.test(m)) {
+    return 'الرجاء تعبئة جميع الحقول المطلوبة';
+  }
+  if (code === '23503' || /foreign key constraint/i.test(m)) {
+    return 'تعذّر ربط الحساب، حاول تسجيل الدخول مرة أخرى';
+  }
+  if (/network/i.test(m)) return 'تعذّر الاتصال، تحقق من الإنترنت وحاول مرة أخرى';
+  return m ? `حدث خطأ: ${m}` : 'حدث خطأ غير متوقع، حاول مرة أخرى';
+}
+
 /* ---------- Profile helpers ---------- */
 async function mzFetchProfile(userId) {
   const { data, error } = await supabaseClient

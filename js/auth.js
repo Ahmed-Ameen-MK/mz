@@ -132,9 +132,14 @@ async function mzCheckDuplicateProfile({ email, name, phone }, excludeId) {
 /* ---------- Public API used across auth pages ---------- */
 const mzAuth = {
   async loginWithGoogle() {
+    // Must be an absolute, root-relative URL — window.location.origin has
+    // no trailing path, so concatenating a relative '../' segment here
+    // (as opposed to assigning it to location.href, which the browser
+    // resolves against the current page) produces a malformed URL and
+    // breaks the OAuth redirect back to auth/callback.html.
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + mzRootPath() + 'auth/callback.html' },
+      options: { redirectTo: window.location.origin + '/auth/callback.html' },
     });
     if (error) throw error;
   },

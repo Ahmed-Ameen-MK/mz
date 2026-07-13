@@ -203,6 +203,7 @@
         session = res2.data.session;
       }
     } catch (err) {
+      console.error('getSession failed:', err);
       showError('تعذّر التحقق من جلسة الدخول.');
       return;
     }
@@ -300,7 +301,8 @@
         mzSetStoredUser({ id: user.id, email: googleEmail, name: googleName });
         window.location.replace('../index.html');
       } catch (err) {
-        msg.textContent = mzFriendlyAuthError(err);
+        console.error('Profile save failed:', err);
+        msg.textContent = mzFriendlyDbError(err);
         msg.className = 'form-msg form-msg--error';
         btn.disabled = false;
         btn.textContent = 'إتمام التسجيل';

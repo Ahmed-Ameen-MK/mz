@@ -800,3 +800,35 @@ html.mz-auth-checking body{ visibility:hidden; }
   color:#fca5a5; text-align:center; padding: 2rem 1.5rem;
   border:1px dashed rgba(239,68,68,.4); max-width:60ch; margin:0 auto;
 }
+
+/* =================== MATCHES PAGE — FEATURED (World Cup / top leagues) =================== */
+/* عمود واحد بعرض الشاشة الكامل بدل 3 مباريات جنب بعض */
+.grid--featured{ grid-template-columns: 1fr; gap: 1rem; }
+
+.league-group--featured .league-group__head{ border-bottom-color: var(--purple-deep); }
+.league-group--featured .league-group__name{ color: var(--purple-glow); }
+
+.match-card{ cursor:pointer; }
+
+.match-card--featured{
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.4rem 1.8rem;
+}
+.match-card--featured .match-card__status{ flex: 0 0 auto; min-width: 120px; }
+.match-card--featured .match-card__teams{ flex: 1; margin: 0; max-width: 520px; }
+.match-card--featured .match-card__team img{ width: 52px; height: 52px; }
+.match-card--featured .match-card__team span{ font-size: .92rem; color: var(--text); font-weight: 700; }
+.match-card--featured .match-card__score{ font-size: 1.4rem; }
+.match-card--featured .match-card__round{ flex: 0 0 auto; margin-top: 0; text-align:left; }
+
+@media (max-width: 760px){
+  .match-card--featured{
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .match-card--featured .match-card__round{ text-align:center; margin-top:.5rem; }
+}

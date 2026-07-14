@@ -18,6 +18,21 @@ const HALFTIME_STATUSES = ['HT'];
 const FINISHED_STATUSES = ['FT', 'AET', 'PEN', 'AWD', 'WO'];
 const POSTPONED_STATUSES = ['PST', 'CANC', 'ABD'];
 
+// الدوريات الكبرى / كاس العالم — رقم أقل = أولوية أعلى (تظهر أولًا)
+const MAJOR_LEAGUES = {
+  1: 0,    // كاس العالم
+  2: 1,    // دوري أبطال أوروبا
+  4: 2,    // كاس الأمم الأوروبية
+  9: 3,    // كوبا أمريكا
+  39: 4,   // الدوري الإنجليزي الممتاز
+  140: 5,  // الليجا الإسبانية
+  135: 6,  // الدوري الإيطالي
+  78: 7,   // الدوري الألماني
+  61: 8,   // الدوري الفرنسي
+  307: 9,  // الدوري السعودي للمحترفين
+  233: 10, // الدوري المصري الممتاز
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const tabsEl    = document.getElementById('dayTabs');
   const contentEl = document.getElementById('matchesContent');
@@ -121,13 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${home ?? 0} - ${away ?? 0}`;
   }
 
+  function matchHref(fixture) {
+    // details.html?match=فرنسا-اسبانيا
+    const home = fixture.teams.home.name;
+    const away = fixture.teams.away.name;
+    return `details.html?match=${encodeURIComponent(home)}-${encodeURIComponent(away)}`;
+  }
+
   function matchCard(fixture) {
     const home = fixture.teams.home;
     const away = fixture.teams.away;
     const round = fixture.league.round || '';
+    const isMajor = MAJOR_LEAGUES[fixture.league.id] !== undefined;
 
     return `
-      <article class="card match-card reveal">
+      <a class="card match-card reveal${isMajor ? ' match-card--featured' : ''}" href="${matchHref(fixture)}">
         <div class="match-card__status">
           ${renderStatusBlock(fixture)}
         </div>
@@ -143,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         ${round ? `<div class="match-card__round">${round}</div>` : ''}
-      </article>`;
+      </a>`;
   }
 
   function groupByLeague(fixtures) {
@@ -151,10 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fixtures.forEach(fx => {
       const id = fx.league.id;
       if (!groups.has(id)) {
+        const isMajor = MAJOR_LEAGUES[id] !== undefined;
         groups.set(id, {
           name: fx.league.name,
           country: fx.league.country,
           logo: fx.league.logo,
+          isMajor,
+          priority: isMajor ? MAJOR_LEAGUES[id] : 999,
           hasLive: false,
           fixtures: []
         });
@@ -164,9 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (LIVE_STATUSES.includes(fx.fixture.status.short)) g.hasLive = true;
     });
 
-    // live leagues first, then by number of fixtures
     return Array.from(groups.values()).sort((a, b) => {
+      // 1) الدوريات الكبرى / كاس العالم دايمًا في الأول
+      if (a.isMajor !== b.isMajor) return a.isMajor ? -1 : 1;
+      // 2) بين الدوريات الكبرى نفسها: كاس العالم ثم أبطال أوروبا... حسب الأولوية المحددة
+      if (a.isMajor && b.isMajor && a.priority !== b.priority) return a.priority - b.priority;
+      // 3) المباريات المباشرة تظهر قبل غيرها
       if (a.hasLive !== b.hasLive) return a.hasLive ? -1 : 1;
+      // 4) بعد كده الأكتر عدد مباريات
       return b.fixtures.length - a.fixtures.length;
     });
   }
@@ -179,13 +210,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const leagues = groupByLeague(fixtures);
     contentEl.innerHTML = leagues.map(league => `
-      <div class="league-group">
+      <div class="league-group${league.isMajor ? ' league-group--featured' : ''}">
         <div class="league-group__head">
           <img src="${league.logo}" alt="${league.name}" class="league-group__logo" loading="lazy">
           <span class="league-group__name">${league.name}</span>
           <span class="league-group__country">${league.country || ''}</span>
         </div>
-        <div class="grid grid--3 stagger">
+        <div class="grid ${league.isMajor ? 'grid--featured' : 'grid--3'} stagger">
           ${league.fixtures
             .sort((a, b) => new Date(a.fixture.date) - new Date(b.fixture.date))
             .map(matchCard).join('')}

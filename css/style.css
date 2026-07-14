@@ -832,3 +832,38 @@ html.mz-auth-checking body{ visibility:hidden; }
   }
   .match-card--featured .match-card__round{ text-align:center; margin-top:.5rem; }
 }
+
+/* =================== MATCH DETAILS PAGE =================== */
+.detail-section{ margin-bottom: 2.4rem; }
+.detail-section:last-child{ margin-bottom:0; }
+.detail-section__title{
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--purple-glow);
+  margin-bottom: 1rem;
+}
+.detail-teams{ margin-bottom: 2.4rem; }
+.detail-card{ min-height: 80px; }
+.detail-card .ai-answer p{
+  color: var(--text-dim);
+  font-size: .96rem;
+  line-height: 1.9;
+  margin-bottom: .75rem;
+}
+.detail-card .ai-answer p:last-child{ margin-bottom:0; }
+.ai-loading{
+  color: var(--text-faint);
+  font-family: var(--font-data);
+  font-size: .85rem;
+}
+.ai-error{ color:#fca5a5; font-size:.9rem; }
+.detail-disclaimer{
+  color: var(--text-faint);
+  font-size: .75rem;
+  margin-top: .8rem;
+  text-align:center;
+}
+
+@media (max-width: 760px){
+  .detail-teams{ grid-template-columns: 1fr; }
+}

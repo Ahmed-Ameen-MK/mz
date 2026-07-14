@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="mz-auth-checking">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل المباراة — MZ TV</title>
+<meta name="description" content="تفاصيل المباراة، أبرز اللاعبين، وتحليل سريع مولّد بالذكاء الاصطناعي.">
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker" aria-label="آخر الأخبار">
+  <div class="ticker__track" id="tickerTrack">
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
+    <span class="ticker__item"><span class="ticker__dot"></span> جارِ تحميل نتائج ومواعيد المباريات الحية…</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      <span class="brand__mark">MZ</span>
+      <span>MZ <span class="brand__tv">TV</span></span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="matches.html" class="active">مواعيد المباريات</a></li>
+      <li><a href="channels/sports.html">القنوات الرياضية</a></li>
+      <li><a href="channels/movies.html">أفلام ومسلسلات</a></li>
+    </ul>
+    <div class="nav__auth">
+      <a href="auth/login.html" class="btn btn--ghost">تسجيل الدخول</a>
+      <a href="auth/register.html" class="btn btn--primary">إنشاء حساب</a>
+    </div>
+    <div class="nav__account" id="navAccount">
+      <button type="button" class="nav__account-btn" id="navAccountBtn">
+        <span class="nav__account-avatar" id="navAccountAvatar">?</span>
+        <span class="nav__account-name" id="navAccountName">الحساب</span>
+      </button>
+      <div class="nav__account-menu">
+        <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
+      </div>
+    </div>
+    <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
+  </nav>
+</header>
+
+<!-- Page hero -->
+<section class="page-hero">
+  <div class="page-hero__bg" style="background-image:url('bgs/sports1.png');"></div>
+  <div class="page-hero__inner">
+    <div class="breadcrumb"><a href="index.html">الرئيسية</a> / <a href="matches.html">مواعيد المباريات</a> / تفاصيل المباراة</div>
+    <h1 id="matchTitle">جارِ تحميل بيانات المباراة…</h1>
+    <p>نبذة سريعة، أبرز اللاعبين، وتحليل مولّد بالذكاء الاصطناعي — لأغراض المتابعة والتسلية فقط.</p>
+  </div>
+</section>
+
+<!-- Details -->
+<section class="section">
+  <div class="wrap">
+
+    <div class="detail-section">
+      <h2 class="detail-section__title">نبذة عن المباراة</h2>
+      <div class="card detail-card" id="sectionOverview">
+        <p class="ai-loading">جارِ التحضير…</p>
+      </div>
+    </div>
+
+    <div class="grid grid--2 detail-teams">
+      <div class="detail-section">
+        <h2 class="detail-section__title" id="homeSquadTitle">أبرز لاعبي الفريق الأول</h2>
+        <div class="card detail-card" id="sectionHomeSquad">
+          <p class="ai-loading">جارِ التحضير…</p>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h2 class="detail-section__title" id="awaySquadTitle">أبرز لاعبي الفريق الثاني</h2>
+        <div class="card detail-card" id="sectionAwaySquad">
+          <p class="ai-loading">جارِ التحضير…</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2 class="detail-section__title">تحليل وتوقع سريع</h2>
+      <div class="card detail-card" id="sectionPrediction">
+        <p class="ai-loading">جارِ التحضير…</p>
+      </div>
+      <p class="detail-disclaimer">هذا التحليل من إنتاج الذكاء الاصطناعي ولأغراض التسلية فقط، وليس نصيحة مراهنات.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer__grid">
+    <div>
+      <a href="index.html" class="brand" style="margin-bottom:1rem; display:flex;">
+        <span class="brand__mark">MZ</span>
+        <span>MZ <span class="brand__tv">TV</span></span>
+      </a>
+      <p style="color:var(--text-dim); font-size:.9rem; max-width:32ch;">منصتك اليومية لمتابعة الرياضة والترفيه: مواعيد، نتائج، وأدلة موثوقة لمصادر البث الرسمية.</p>
+    </div>
+    <div>
+      <h4>الأقسام</h4>
+      <ul>
+        <li><a href="matches.html">مواعيد المباريات</a></li>
+        <li><a href="channels/sports.html">القنوات الرياضية</a></li>
+        <li><a href="channels/movies.html">أفلام ومسلسلات</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>الحساب</h4>
+      <ul>
+        <li><a href="auth/login.html">تسجيل الدخول</a></li>
+        <li><a href="auth/register.html">إنشاء حساب</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>معلومات</h4>
+      <ul>
+        <li><a href="#">من نحن</a></li>
+        <li><a href="#">تواصل معنا</a></li>
+        <li><a href="#">سياسة الخصوصية</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 MZ TV — جميع الحقوق محفوظة</span>
+    <span>صُنع لعشّاق الرياضة والترفيه</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sports-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/details.js"></script>
+</body>
+</html>

@@ -58,13 +58,19 @@ function mzRenderAuthUI() {
 
 function mzWireAccountMenu() {
   const accountBox = document.getElementById('navAccount');
+  const toggleBtn = document.getElementById('navAccountBtn');
   const logoutBtn = document.getElementById('navLogoutBtn');
+  const deleteBtn = document.getElementById('navDeleteAccountBtn');
   if (!accountBox) return;
 
-  accountBox.addEventListener('click', (e) => {
-    if (e.target === logoutBtn) return; // let logout handler run separately
-    accountBox.classList.toggle('is-open');
-  });
+  // فقط زر الحساب نفسه هو اللي يفتح/يقفل القائمة —
+  // الضغط على أي رابط جواها (رسائل، تسجيل خروج...) ينفّذ فعله مباشرة
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      accountBox.classList.toggle('is-open');
+    });
+  }
   document.addEventListener('click', (e) => {
     if (!accountBox.contains(e.target)) accountBox.classList.remove('is-open');
   });
@@ -74,6 +80,44 @@ function mzWireAccountMenu() {
       e.preventDefault();
       await mzAuth.logout();
     });
+  }
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const sure = confirm('هل أنت متأكد أنك تريد حذف حسابك نهائيًا؟ سيتم حذف بياناتك ولا يمكن التراجع عن هذا الإجراء.');
+      if (!sure) return;
+      const originalText = deleteBtn.textContent;
+      deleteBtn.textContent = 'جارِ الحذف…';
+      try {
+        await mzAuth.deleteAccount();
+      } catch (err) {
+        alert(mzFriendlyDbError(err));
+        deleteBtn.textContent = originalText;
+      }
+    });
+  }
+}
+
+/* ---------- Unread messages badge on "الرسائل" link ---------- */
+async function mzCheckUnreadMessages() {
+  const badge = document.getElementById('navMsgBadge');
+  if (!badge) return;
+  const user = mzGetStoredUser();
+  if (!user) return;
+  try {
+    const { count, error } = await supabaseClient
+      .from('contact')
+      .select('id', { count: 'exact', head: true })
+      .eq('to', user.id)
+      .eq('read', 'no');
+    if (error) throw error;
+    if (count && count > 0) {
+      badge.textContent = count > 9 ? '9+' : String(count);
+      badge.style.display = 'inline-flex';
+    }
+  } catch {
+    /* فشل صامت — الشارة ببساطة ما هتظهرش */
   }
 }
 
@@ -173,20 +217,34 @@ const mzAuth = {
     mzRenderAuthUI();
     window.location.href = mzRootPath() + 'index.html';
   },
+
+  // يستدعي دالة SQL باسم delete_own_account (SECURITY DEFINER) لازم
+  // تُنشأ في Supabase مسبقًا — راجع supabase-setup.sql المرفق.
+  // بدون هذه الدالة، حذف صف public.users فقط ممكن من المتصفح،
+  // لكن حذف صف auth.users محتاج صلاحيات أدمن مش متاحة للواجهة الأمامية.
+  async deleteAccount() {
+    const { error } = await supabaseClient.rpc('delete_own_account');
+    if (error) throw error;
+    await supabaseClient.auth.signOut();
+    mzClearStoredUser();
+    window.location.href = mzRootPath() + 'index.html';
+  },
 };
 
 /* ---------- On every page load: sync UI + guard the homepage ---------- */
 document.addEventListener('DOMContentLoaded', async () => {
   mzRenderAuthUI();
   mzWireAccountMenu();
+  mzCheckUnreadMessages();
 
-  // index.html is only for logged-in visitors — bounce guests to login.
-  if (mzIsIndexPage()) {
+  // index.html وأي صفحة عليها data-require-auth مخصصة لمستخدمين
+  // مسجّلين فقط — نرجّع الزوّار لصفحة تسجيل الدخول.
+  if (mzIsIndexPage() || document.body.hasAttribute('data-require-auth')) {
     let user = mzGetStoredUser();
     if (!user) {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (!session) {
-        window.location.replace('auth/login.html');
+        window.location.replace(mzRootPath() + 'auth/login.html');
         return;
       }
     }

@@ -867,3 +867,67 @@ html.mz-auth-checking body{ visibility:hidden; }
 @media (max-width: 760px){
   .detail-teams{ grid-template-columns: 1fr; }
 }
+
+/* =================== CTA SECTION (spacing fix) ===================
+   كانت .section تضيف 6.5rem بالفعل، وإضافة padding:3rem 0 على الـ wrap
+   كانت تضاعف المسافة فتظهر كمساحة سوداء فارغة قبل الفوتر مباشرة. */
+.section--cta{ padding-top: 4.5rem; padding-bottom: 4.5rem; }
+
+/* =================== NAV ACCOUNT MENU — extra items =================== */
+.nav__account-menu a.is-danger{ color:#fca5a5; }
+.nav__account-menu a.is-danger:hover{ color:#fecaca; background: rgba(239,68,68,.12); }
+.nav__account-menu hr{ border:0; border-top:1px solid var(--border-soft); margin:.35rem 0; }
+.nav__msg-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:18px; height:18px; padding:0 .3rem; margin-inline-start:.4rem;
+  background: var(--live-red); color:#fff; font-size:.68rem; font-weight:800;
+  border-radius:50%; font-family: var(--font-data);
+}
+
+/* =================== CONTACT FORM =================== */
+.contact-card{ max-width: 640px; margin: 0 auto; }
+.contact-card label{ display:block; margin-bottom:.5rem; font-size:.85rem; color: var(--text-dim); }
+.star-rating{ display:flex; gap:.4rem; }
+.star-rating button{
+  background:transparent; border:0; cursor:pointer; font-size:1.7rem; line-height:1;
+  color: var(--border); transition: color .2s var(--ease), transform .2s var(--ease);
+}
+.star-rating button:hover{ transform: scale(1.15); }
+.star-rating button.is-active{ color: var(--purple-glow); }
+.contact-guard{ text-align:center; padding:2.5rem 1.5rem; color: var(--text-dim); }
+.contact-guard a{ color: var(--purple-bright); font-weight:700; }
+
+/* =================== OTHER SITES PROMO (contact-us) =================== */
+.other-sites .card{ text-align:center; }
+.other-sites .card a.btn{ margin-top:.9rem; }
+
+/* =================== MESSAGES (admin inbox + user inbox) =================== */
+.msg-list{ display:flex; flex-direction:column; gap:.9rem; margin-bottom:2.5rem; }
+.msg-item{
+  background: var(--bg-card); border:1px solid var(--border);
+  padding:1.2rem 1.4rem; cursor:pointer; position:relative;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  transition: border-color .25s var(--ease);
+}
+.msg-item:hover{ border-color: var(--purple); }
+.msg-item.is-unread{ border-color: var(--purple-bright); }
+.msg-item.is-unread::before{
+  content:""; position:absolute; top:1.1rem; inset-inline-start:1.1rem;
+  width:8px; height:8px; background: var(--purple-bright); border-radius:50%;
+}
+.msg-item__head{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:.5rem; flex-wrap:wrap; }
+.msg-item__name{ font-weight:800; }
+.msg-item__date{ color: var(--text-faint); font-size:.76rem; font-family: var(--font-data); }
+.msg-item__stars{ color: var(--purple-glow); font-size:.82rem; letter-spacing:.1em; margin-bottom:.4rem; }
+.msg-item__content{ color: var(--text-dim); font-size:.9rem; line-height:1.8; }
+.msg-item__content.is-collapsed{
+  overflow:hidden; text-overflow:ellipsis; display:-webkit-box;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical;
+}
+.reply-box{ background: var(--bg-elevated); border:1px solid var(--border-soft); padding:1rem 1.2rem; margin-top:1rem; }
+.reply-box textarea{
+  width:100%; min-height:100px; resize:vertical;
+  background: var(--bg-card); border:1px solid var(--border); color: var(--text);
+  padding:.8rem .9rem; font-size:.9rem; font-family:inherit; margin-bottom:.8rem;
+}
+.msg-empty{ color: var(--text-dim); text-align:center; padding:3rem 0; }

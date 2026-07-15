@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
   const uid = session && session.user ? session.user.id : null;
 
-  if (!uid || uid !== MZ_ADMIN_UID || uid !== MZ_ADMIN_UID_2 || uid !== MZ_ADMIN_UID_3) {
+  if (!uid || uid !== MZ_ADMIN_UID ) {
     gateEl.style.display = 'block';
     shellEl.style.display = 'none';
     return;

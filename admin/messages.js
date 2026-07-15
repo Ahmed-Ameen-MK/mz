@@ -9,7 +9,9 @@
 // راجع ملف supabase-setup.sql المرفق.
 // ===========================================================
 
-const MZ_ADMIN_UID = 'ضع-هنا-UUID-حساب-الأدمن'; // TODO: استبدله بمعرف حساب الأدمن الحقيقي من Supabase
+const MZ_ADMIN_UID = '1feff681-f812-40b3-ac24-63e5649b7f08'; // AHMED 
+const MZ_ADMIN_UID_2 = 'b9013780-182e-4646-8034-b6c3eac54ece'; // MOHAMED
+const MZ_ADMIN_UID_3 = '5b53be9c-d98e-4ddc-8441-0ec18edef807'; // MOHAMED
 
 document.addEventListener('DOMContentLoaded', async () => {
   const listEl = document.getElementById('adminMsgList');
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
   const uid = session && session.user ? session.user.id : null;
 
-  if (!uid || uid !== MZ_ADMIN_UID) {
+  if (!uid || uid !== MZ_ADMIN_UID || uid !== MZ_ADMIN_UID_2 || uid !== MZ_ADMIN_UID_3) {
     gateEl.style.display = 'block';
     shellEl.style.display = 'none';
     return;

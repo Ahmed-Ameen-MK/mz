@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رسائل المستخدمين — لوحة تحكم MZ TV</title>
+<link rel="icon" href="../icon.png" type="image/png">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-header__inner">
+    <a href="../index.html" class="brand">
+      <span class="brand__mark">MZ</span>
+      <span>MZ <span class="brand__tv">TV</span></span>
+    </a>
+    <span class="badge">لوحة تحكم — رسائل المستخدمين</span>
+  </div>
+</header>
+
+<main class="admin-shell">
+  <div id="adminGate" style="display:none; text-align:center; padding:4rem 1rem;">
+    <h1 style="font-family:var(--font-display); font-size:2rem; margin-bottom:.8rem;">غير مصرح لك بالدخول</h1>
+    <p class="section__desc" style="margin:0 auto 1.6rem;">هذه الصفحة مخصصة لحساب الأدمن فقط.</p>
+    <a href="../auth/login.html" class="btn btn--primary">تسجيل الدخول بحساب الأدمن</a>
+  </div>
+
+  <div id="adminShell" style="display:none;">
+    <h1>رسائل المستخدمين</h1>
+    <p class="section__desc">الرسائل الواردة من المستخدمين عبر نموذج "تواصل معنا". اضغط على أي رسالة لقراءتها والرد عليها.</p>
+    <div class="msg-list" id="adminMsgList"></div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="messages.js"></script>
+</body>
+</html>

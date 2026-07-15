@@ -42,7 +42,10 @@
         <span class="nav__account-name" id="navAccountName">الحساب</span>
       </button>
       <div class="nav__account-menu">
+        <a href="messages.html">الرسائل <span class="nav__msg-badge" id="navMsgBadge" style="display:none;"></span></a>
         <a href="#" id="navLogoutBtn">تسجيل الخروج</a>
+        <hr>
+        <a href="#" id="navDeleteAccountBtn" class="is-danger">حذف الحساب</a>
       </div>
     </div>
     <button class="nav__toggle" aria-label="فتح القائمة">☰</button>
@@ -178,11 +181,27 @@
 </section>
 
 <!-- CTA -->
-<section class="section section--alt">
-  <div class="wrap reveal-clip" style="text-align:center; padding:3rem 0;">
+<section class="section section--alt section--cta">
+  <div class="wrap reveal-clip" style="text-align:center;">
     <h2 class="section__title" style="margin-bottom:1rem;">جاهز تبدأ المتابعة؟</h2>
     <p class="section__desc" style="margin:0 auto 2rem;">أنشئ حسابك المجاني الآن واحفظ فرقك ومبارياتك المفضلة.</p>
     <a href="auth/register.html" class="btn btn--primary">إنشاء حساب مجاني</a>
+  </div>
+</section>
+
+<!-- Contact form -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <div>
+        <span class="section__label">// تواصل معنا</span>
+        <h2 class="section__title">راسلنا</h2>
+        <p class="section__desc">لديك اقتراح أو ملاحظة؟ أرسل رسالتك وسنرد عليك من صفحة "رسائلي" بعد تسجيل الدخول.</p>
+      </div>
+    </div>
+    <div class="card contact-card reveal" id="contactFormWrap">
+      <p class="ai-loading">جارِ التحضير…</p>
+    </div>
   </div>
 </section>
 
@@ -214,9 +233,9 @@
     <div>
       <h4>معلومات</h4>
       <ul>
-        <li><a href="#">من نحن</a></li>
-        <li><a href="#">تواصل معنا</a></li>
-        <li><a href="#">سياسة الخصوصية</a></li>
+        <li><a href="about-us.html">من نحن</a></li>
+        <li><a href="contact-us.html">تواصل معنا</a></li>
+        <li><a href="privacy.html">سياسة الخصوصية</a></li>
       </ul>
     </div>
   </div>
@@ -231,5 +250,7 @@
 <script src="js/auth.js"></script>
 <script src="js/sports-data.js"></script>
 <script src="js/main.js"></script>
+<script src="js/home-matches.js"></script>
+<script src="js/contact.js"></script>
 </body>
 </html>

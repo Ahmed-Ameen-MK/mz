@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تفاصيل المباراة — MZ TV</title>
-<meta name="description" content="تفاصيل المباراة، أبرز اللاعبين، وتحليل سريع مولّد بالذكاء الاصطناعي.">
+<title>تواصل معنا — MZ TV</title>
+<meta name="description" content="راسل فريق MZ TV، وتصفح مواقعنا الأخرى.">
 <link rel="icon" href="icon.png" type="image/png">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,7 +27,7 @@
     </a>
     <ul class="nav__links">
       <li><a href="index.html">الرئيسية</a></li>
-      <li><a href="matches.html" class="active">مواعيد المباريات</a></li>
+      <li><a href="matches.html">مواعيد المباريات</a></li>
       <li><a href="channels/sports.html">القنوات الرياضية</a></li>
       <li><a href="channels/movies.html">أفلام ومسلسلات</a></li>
     </ul>
@@ -55,47 +55,50 @@
 <section class="page-hero">
   <div class="page-hero__bg" style="background-image:url('bgs/sports1.png');"></div>
   <div class="page-hero__inner">
-    <div class="breadcrumb"><a href="index.html">الرئيسية</a> / <a href="matches.html">مواعيد المباريات</a> / تفاصيل المباراة</div>
-    <h1 id="matchTitle">جارِ تحميل بيانات المباراة…</h1>
-    <p>نبذة سريعة، أبرز اللاعبين، وتحليل مولّد بالذكاء الاصطناعي — لأغراض المتابعة والتسلية فقط.</p>
+    <div class="breadcrumb"><a href="index.html">الرئيسية</a> / تواصل معنا</div>
+    <h1>تواصل معنا</h1>
+    <p>عندك اقتراح، ملاحظة، أو مشكلة تقنية؟ راسلنا وسنرد عليك من صفحة "رسائلي" بعد تسجيل الدخول.</p>
   </div>
 </section>
 
-<!-- Details -->
+<!-- Contact form -->
 <section class="section">
   <div class="wrap">
+    <div class="card contact-card reveal" id="contactFormWrap">
+      <p class="ai-loading">جارِ التحضير…</p>
+    </div>
+  </div>
+</section>
 
-    <div class="detail-section">
-      <h2 class="detail-section__title">نبذة عن المباراة</h2>
-      <div class="card detail-card" id="sectionOverview">
-        <p class="ai-loading">جارِ التحضير…</p>
+<!-- Other sites -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <div>
+        <span class="section__label">// مشاريعنا الأخرى</span>
+        <h2 class="section__title">زور مواقع أخرى لنا</h2>
       </div>
     </div>
-
-    <div class="grid grid--2 detail-teams">
-      <div class="detail-section">
-        <h2 class="detail-section__title" id="homeSquadTitle">أبرز لاعبي الفريق الأول</h2>
-        <div class="card detail-card" id="sectionHomeSquad">
-          <p class="ai-loading">جارِ التحضير…</p>
-        </div>
-      </div>
-
-      <div class="detail-section">
-        <h2 class="detail-section__title" id="awaySquadTitle">أبرز لاعبي الفريق الثاني</h2>
-        <div class="card detail-card" id="sectionAwaySquad">
-          <p class="ai-loading">جارِ التحضير…</p>
-        </div>
-      </div>
+    <div class="grid grid--3 stagger other-sites">
+      <article class="card reveal">
+        <div class="card__icon">🇯🇵</div>
+        <h3>Tongue Sure</h3>
+        <p>تعلّم اللغة اليابانية خطوة بخطوة.</p>
+        <a href="https://tonguesure.online" target="_blank" rel="noopener" class="btn btn--ghost">تصفح الموقع ←</a>
+      </article>
+      <article class="card reveal">
+        <div class="card__icon">📚</div>
+        <h3>مكتبتي</h3>
+        <p>حمّل الكتب بصيغة PDF واقرأها مجانًا.</p>
+        <a href="https://maktabty99.vercel.app" target="_blank" rel="noopener" class="btn btn--ghost">تصفح الموقع ←</a>
+      </article>
+      <article class="card reveal">
+        <div class="card__icon">🎮</div>
+        <h3>دوري العباقرة</h3>
+        <p>وقت اللعب — منصة أسئلة وتحديات تفاعلية.</p>
+        <a href="https://dawry-el-3bakera.vercel.app" target="_blank" rel="noopener" class="btn btn--ghost">تصفح الموقع ←</a>
+      </article>
     </div>
-
-    <div class="detail-section">
-      <h2 class="detail-section__title">تحليل وتوقع سريع</h2>
-      <div class="card detail-card" id="sectionPrediction">
-        <p class="ai-loading">جارِ التحضير…</p>
-      </div>
-      <p class="detail-disclaimer">هذا التحليل من إنتاج الذكاء الاصطناعي ولأغراض التسلية فقط، وليس نصيحة مراهنات.</p>
-    </div>
-
   </div>
 </section>
 
@@ -135,15 +138,14 @@
   </div>
   <div class="footer__bottom">
     <span>© 2026 MZ TV — جميع الحقوق محفوظة</span>
-    <span>صُنع لعشّاق الرياضة والترفيه</span>
+    <span>Powered by A.Ameen for Mohammed</span>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/sports-data.js"></script>
 <script src="js/main.js"></script>
-<script src="js/details.js"></script>
+<script src="js/contact.js"></script>
 </body>
 </html>

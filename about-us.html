@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تفاصيل المباراة — MZ TV</title>
-<meta name="description" content="تفاصيل المباراة، أبرز اللاعبين، وتحليل سريع مولّد بالذكاء الاصطناعي.">
+<title>من نحن — MZ TV</title>
+<meta name="description" content="نبذة عن فريق MZ TV القائم على تطوير المنصة.">
 <link rel="icon" href="icon.png" type="image/png">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,7 +27,7 @@
     </a>
     <ul class="nav__links">
       <li><a href="index.html">الرئيسية</a></li>
-      <li><a href="matches.html" class="active">مواعيد المباريات</a></li>
+      <li><a href="matches.html">مواعيد المباريات</a></li>
       <li><a href="channels/sports.html">القنوات الرياضية</a></li>
       <li><a href="channels/movies.html">أفلام ومسلسلات</a></li>
     </ul>
@@ -55,47 +55,32 @@
 <section class="page-hero">
   <div class="page-hero__bg" style="background-image:url('bgs/sports1.png');"></div>
   <div class="page-hero__inner">
-    <div class="breadcrumb"><a href="index.html">الرئيسية</a> / <a href="matches.html">مواعيد المباريات</a> / تفاصيل المباراة</div>
-    <h1 id="matchTitle">جارِ تحميل بيانات المباراة…</h1>
-    <p>نبذة سريعة، أبرز اللاعبين، وتحليل مولّد بالذكاء الاصطناعي — لأغراض المتابعة والتسلية فقط.</p>
+    <div class="breadcrumb"><a href="index.html">الرئيسية</a> / من نحن</div>
+    <h1>من نحن</h1>
+    <p>تعرّف على الفريق القائم على MZ TV.</p>
   </div>
 </section>
 
-<!-- Details -->
+<!-- About content -->
 <section class="section">
-  <div class="wrap">
-
-    <div class="detail-section">
-      <h2 class="detail-section__title">نبذة عن المباراة</h2>
-      <div class="card detail-card" id="sectionOverview">
-        <p class="ai-loading">جارِ التحضير…</p>
-      </div>
+  <div class="wrap" style="max-width:820px;">
+    <div class="card reveal">
+      <h3>فريق MZ</h3>
+      <p style="margin-top:.8rem; line-height:1.9;">
+        نحن فريق MZ، صمّمنا وطوّرنا موقع MZ TV سنة 2026 ليكون وجهتك اليومية
+        لمتابعة مواعيد ونتائج المباريات لحظة بلحظة، والوصول إلى دليل موثوق
+        لمنصات البث الرياضي الرسمية، بالإضافة إلى مراجعات وتريلرات لأحدث
+        الأفلام والمسلسلات — كل ذلك في تجربة واحدة سريعة وأنيقة.
+      </p>
+      <p style="margin-top:1rem; line-height:1.9;">
+        نحرص على أن يبقى المحتوى قانونيًا بالكامل: لا نستضيف أي بث مباشر
+        بأنفسنا، بل نوجّهك دائمًا إلى المنصات والقنوات الرسمية المرخّصة.
+      </p>
+      <p style="margin-top:1rem;">
+        لأي استفسار أو اقتراح، تقدر تتواصل معنا من صفحة
+        <a href="contact-us.html" style="color:var(--purple-bright);">تواصل معنا</a>.
+      </p>
     </div>
-
-    <div class="grid grid--2 detail-teams">
-      <div class="detail-section">
-        <h2 class="detail-section__title" id="homeSquadTitle">أبرز لاعبي الفريق الأول</h2>
-        <div class="card detail-card" id="sectionHomeSquad">
-          <p class="ai-loading">جارِ التحضير…</p>
-        </div>
-      </div>
-
-      <div class="detail-section">
-        <h2 class="detail-section__title" id="awaySquadTitle">أبرز لاعبي الفريق الثاني</h2>
-        <div class="card detail-card" id="sectionAwaySquad">
-          <p class="ai-loading">جارِ التحضير…</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <h2 class="detail-section__title">تحليل وتوقع سريع</h2>
-      <div class="card detail-card" id="sectionPrediction">
-        <p class="ai-loading">جارِ التحضير…</p>
-      </div>
-      <p class="detail-disclaimer">هذا التحليل من إنتاج الذكاء الاصطناعي ولأغراض التسلية فقط، وليس نصيحة مراهنات.</p>
-    </div>
-
   </div>
 </section>
 
@@ -142,8 +127,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/sports-data.js"></script>
 <script src="js/main.js"></script>
-<script src="js/details.js"></script>
 </body>
 </html>

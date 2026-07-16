@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="mz-auth-checking">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,27 +48,23 @@
 
     <div class="form-row">
       <label class="form-field">
-        <span>رابط بث 1 (اختياري)</span>
+        <span>بث 1 — رابط مباشر (اختياري)</span>
         <input type="url" id="channelStream1" placeholder="https://example.com/stream1">
       </label>
       <label class="form-field">
-        <span>رابط بث 2 (اختياري)</span>
-        <input type="url" id="channelStream2" placeholder="https://example.com/stream2">
+        <span>رابط موقع للانتقال إليه (اختياري)</span>
+        <input type="url" id="channelUrl" placeholder="https://example.com">
       </label>
     </div>
 
     <div class="form-row">
       <label class="form-field">
-        <span>رابط بث 3 (اختياري)</span>
-        <input type="url" id="channelStream3" placeholder="https://example.com/stream3">
-      </label>
-      <label class="form-field">
-        <span>كود تضمين يوتيوب (اختياري)</span>
-        <input type="text" id="channelYoutubeCode" placeholder="الصق كود الـ iframe كامل من يوتيوب، أو رابط embed مباشرة">
+        <span>كود&lt;/&gt; تضمين iframe — بث 2 (اختياري)</span>
+        <textarea id="channelIframe" placeholder="الصق كود الـ iframe كامل هنا (يبدأ بـ &lt;iframe src=&quot;...&quot;&gt;)"></textarea>
       </label>
     </div>
 
-    <p style="color:var(--text-faint); font-size:.8rem; margin-bottom:1.1rem;">* لازم رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو رمز تضمين يوتيوب.</p>
+    <p style="color:var(--text-faint); font-size:.8rem; margin-bottom:1.1rem;">* لازم بث 1 أو كود تضمين iframe على الأقل حتى يظهر زر "مشاهدة". رابط الموقع اختياري ويظهر كزر "الانتقال" منفصل.</p>
 
     <div class="form-row">
       <label class="form-field">

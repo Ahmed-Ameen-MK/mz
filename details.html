@@ -65,35 +65,68 @@
 <section class="section">
   <div class="wrap">
 
-    <div class="detail-section">
-      <h2 class="detail-section__title">نبذة عن المباراة</h2>
-      <div class="card detail-card" id="sectionOverview">
-        <p class="ai-loading">جارِ التحضير…</p>
+    <!-- Match-details mode (?match=) -->
+    <div id="matchDetailSections">
+      <div class="detail-section">
+        <h2 class="detail-section__title">نبذة عن المباراة</h2>
+        <div class="card detail-card" id="sectionOverview">
+          <p class="ai-loading">جارِ التحضير…</p>
+        </div>
+      </div>
+
+      <div class="grid grid--2 detail-teams">
+        <div class="detail-section">
+          <h2 class="detail-section__title" id="homeSquadTitle">أبرز لاعبي الفريق الأول</h2>
+          <div class="card detail-card" id="sectionHomeSquad">
+            <p class="ai-loading">جارِ التحضير…</p>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h2 class="detail-section__title" id="awaySquadTitle">أبرز لاعبي الفريق الثاني</h2>
+          <div class="card detail-card" id="sectionAwaySquad">
+            <p class="ai-loading">جارِ التحضير…</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h2 class="detail-section__title">تحليل وتوقع سريع</h2>
+        <div class="card detail-card" id="sectionPrediction">
+          <p class="ai-loading">جارِ التحضير…</p>
+        </div>
+        <p class="detail-disclaimer">هذا التحليل من إنتاج الذكاء الاصطناعي ولأغراض التسلية فقط، وليس نصيحة مراهنات.</p>
       </div>
     </div>
 
-    <div class="grid grid--2 detail-teams">
+    <!-- Channel-details mode (?channel=) -->
+    <div id="channelDetailSections" style="display:none;">
       <div class="detail-section">
-        <h2 class="detail-section__title" id="homeSquadTitle">أبرز لاعبي الفريق الأول</h2>
-        <div class="card detail-card" id="sectionHomeSquad">
+        <h2 class="detail-section__title">نبذة عن القناة</h2>
+        <div class="card detail-card" id="sectionChannelOverview">
           <p class="ai-loading">جارِ التحضير…</p>
         </div>
       </div>
 
       <div class="detail-section">
-        <h2 class="detail-section__title" id="awaySquadTitle">أبرز لاعبي الفريق الثاني</h2>
-        <div class="card detail-card" id="sectionAwaySquad">
+        <h2 class="detail-section__title">الترددات على الأقمار الصناعية</h2>
+        <div class="card detail-card" id="sectionChannelFrequencies">
           <p class="ai-loading">جارِ التحضير…</p>
         </div>
+        <p class="detail-disclaimer">الترددات من إنتاج الذكاء الاصطناعي وقد تختلف عن الواقع — يُنصح بالتأكد منها عبر مصدر رسمي.</p>
       </div>
-    </div>
 
-    <div class="detail-section">
-      <h2 class="detail-section__title">تحليل وتوقع سريع</h2>
-      <div class="card detail-card" id="sectionPrediction">
-        <p class="ai-loading">جارِ التحضير…</p>
+      <div class="detail-section">
+        <h2 class="detail-section__title">المشاهدة</h2>
+        <div class="card detail-card">
+          <div class="channel-watch__actions">
+            <button type="button" class="btn btn--primary" id="channelWatchBtn">▶ مشاهدة</button>
+            <a href="#" target="_blank" rel="noopener" class="btn btn--ghost" id="channelGotoBtn" style="display:none;">الانتقال إلى الموقع ←</a>
+          </div>
+          <div class="stream-switch" id="channelStreamSwitch" style="display:none;"></div>
+          <div class="channel-player" id="channelDetailPlayer" style="display:none;"></div>
+        </div>
       </div>
-      <p class="detail-disclaimer">هذا التحليل من إنتاج الذكاء الاصطناعي ولأغراض التسلية فقط، وليس نصيحة مراهنات.</p>
     </div>
 
   </div>

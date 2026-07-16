@@ -566,11 +566,12 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .admin-form h2{ font-size:1.15rem; margin-bottom:1.3rem; }
 .form-row{ display:flex; gap:1.2rem; flex-wrap:wrap; margin-bottom:1.1rem; }
 .form-field{ display:flex; flex-direction:column; gap:.4rem; flex:1; min-width:220px; font-size:.85rem; color: var(--text-dim); }
-.form-field input, .form-field select{
+.form-field input, .form-field select, .form-field textarea{
   background: var(--bg-elevated); border:1px solid var(--border); color: var(--text);
-  padding:.7rem .9rem; font-size:.9rem;
+  padding:.7rem .9rem; font-size:.9rem; font-family: inherit;
 }
-.form-field input:focus, .form-field select:focus{ outline:none; border-color: var(--purple-bright); }
+.form-field textarea{ resize: vertical; min-height: 84px; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus{ outline:none; border-color: var(--purple-bright); }
 .admin-form__actions{ display:flex; gap:.8rem; margin-top:.6rem; }
 .btn--sm{ padding:.4rem .9rem; font-size:.78rem; }
 .btn--danger{ color:#fca5a5; border-color: rgba(239,68,68,.4); }
@@ -867,6 +868,11 @@ html.mz-auth-checking body{ visibility:hidden; }
 @media (max-width: 760px){
   .detail-teams{ grid-template-columns: 1fr; }
 }
+
+/* =================== CHANNEL DETAILS (details.html?channel=) =================== */
+.channel-watch__actions{ display:flex; gap:1rem; flex-wrap:wrap; }
+.channel-watch__actions + .stream-switch{ margin-top:1.1rem; }
+#channelDetailPlayer.channel-player{ margin-top:1.3rem; }
 
 /* =================== CTA SECTION (spacing fix) ===================
    كانت .section تضيف 6.5rem بالفعل، وإضافة padding:3rem 0 على الـ wrap

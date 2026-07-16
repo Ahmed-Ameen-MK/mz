@@ -1,7 +1,9 @@
 // ===========================================================
 // MZ TV — لوحة تحكم القنوات الرياضية (admin/sports-channels.html)
 // نشر / تعديل / حذف صفوف جدول channels في Supabase
-// الأعمدة: channel, type, stream1, stream2, stream3, youtube_code, avatar_url
+// الأعمدة: channel, type, stream1, iframe, url, avatar_url, onerror
+// الصفحة محمية: لا تفتح إلا لمستخدم مسجّل دخوله وعمود status
+// في جدول users بتاعه = 'admin'.
 // ===========================================================
 
 const ADMIN_CH_PRESET_TYPES = ['دوريات كبرى', 'مصري', 'إماراتي', 'قطري', 'سعودي'];
@@ -18,20 +20,6 @@ let adminChEditingId = null;
 
 function adminChEsc(s) {
   return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-}
-
-// يقبل: كود iframe كامل ملصوق من يوتيوب، أو رابط embed مباشر، أو مجرد video ID
-function adminChExtractYoutubeSrc(raw) {
-  const val = (raw || '').trim();
-  if (!val) return '';
-
-  const iframeMatch = val.match(/src=["']([^"']+)["']/i);
-  if (iframeMatch) return iframeMatch[1];
-
-  if (/^https?:\/\//i.test(val)) return val;
-
-  // مجرد كود فيديو
-  return `https://www.youtube.com/embed/${val}`;
 }
 
 function adminChSetMsg(text, kind) {
@@ -80,9 +68,8 @@ function adminChToggleNewTypeRow() {
 function adminChSourcesBadges(c) {
   const badges = [];
   if (c.stream1) badges.push('بث 1');
-  if (c.stream2) badges.push('بث 2');
-  if (c.stream3) badges.push('بث 3');
-  if (c.youtube_code) badges.push('يوتيوب');
+  if (c.iframe) badges.push('بث 2 (iframe)');
+  if (c.url) badges.push('رابط');
   if (!badges.length) return '<span style="color:var(--text-faint); font-size:.8rem;">لا يوجد</span>';
   return badges.map(b => `<span class="badge" style="margin-inline-end:.35rem;">${b}</span>`).join('');
 }
@@ -153,9 +140,8 @@ function adminChStartEdit(id) {
   document.getElementById('channelId').value = ch.id;
   document.getElementById('channelName').value = ch.channel;
   document.getElementById('channelStream1').value = ch.stream1 || '';
-  document.getElementById('channelStream2').value = ch.stream2 || '';
-  document.getElementById('channelStream3').value = ch.stream3 || '';
-  document.getElementById('channelYoutubeCode').value = ch.youtube_code || '';
+  document.getElementById('channelIframe').value = ch.iframe || '';
+  document.getElementById('channelUrl').value = ch.url || '';
   document.getElementById('channelAvatarUrl').value = ch.avatar_url || '';
   document.getElementById('channelOnerror').value = ch.onerror || '';
   adminChBuildTypeOptions(ch.type);
@@ -203,10 +189,8 @@ async function adminChSubmit(e) {
   const type = select.value === '__new__' ? newTypeInput.value.trim() : select.value;
 
   const stream1 = document.getElementById('channelStream1').value.trim();
-  const stream2 = document.getElementById('channelStream2').value.trim();
-  const stream3 = document.getElementById('channelStream3').value.trim();
-  const youtubeRaw = document.getElementById('channelYoutubeCode').value.trim();
-  const youtubeCode = adminChExtractYoutubeSrc(youtubeRaw);
+  const iframeCode = document.getElementById('channelIframe').value.trim();
+  const url = document.getElementById('channelUrl').value.trim();
   const avatarUrl = document.getElementById('channelAvatarUrl').value.trim();
   const onerrorUrl = document.getElementById('channelOnerror').value.trim();
 
@@ -215,8 +199,8 @@ async function adminChSubmit(e) {
     return;
   }
 
-  if (!stream1 && !stream2 && !stream3 && !youtubeCode) {
-    adminChSetMsg('لازم تدخل رابط بث واحد على الأقل (بث 1 / بث 2 / بث 3) أو كود تضمين يوتيوب', 'error');
+  if (!stream1 && !iframeCode) {
+    adminChSetMsg('لازم تدخل بث 1 أو كود تضمين iframe على الأقل حتى يظهر زر المشاهدة', 'error');
     return;
   }
 
@@ -224,9 +208,8 @@ async function adminChSubmit(e) {
     channel: name,
     type,
     stream1: stream1 || null,
-    stream2: stream2 || null,
-    stream3: stream3 || null,
-    youtube_code: youtubeCode || null,
+    iframe: iframeCode || null,
+    url: url || null,
     avatar_url: avatarUrl || null,
     onerror: onerrorUrl || null,
   };
@@ -255,6 +238,38 @@ async function adminChSubmit(e) {
   }
 }
 
+/* ---------- حراسة الصفحة: تفتح فقط لمستخدم status = 'admin' ---------- */
+function adminChDeny(message) {
+  document.documentElement.classList.remove('mz-auth-checking');
+  const shell = document.querySelector('main.admin-shell');
+  if (shell) shell.innerHTML = `<p class="ai-error" style="padding:4rem 0; text-align:center;">${message}</p>`;
+  return false;
+}
+
+async function adminChCheckAccess() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return adminChDeny('يجب تسجيل الدخول أولًا للوصول لهذه الصفحة.');
+
+    const { data: profile, error } = await supabaseClient
+      .from('users')
+      .select('status')
+      .eq('id', session.user.id)
+      .maybeSingle();
+    if (error) throw error;
+
+    if (!profile || profile.status !== 'admin') {
+      return adminChDeny('ليس لديك صلاحية الوصول لهذه الصفحة.');
+    }
+
+    document.documentElement.classList.remove('mz-auth-checking');
+    return true;
+  } catch (err) {
+    console.error('Admin access check error:', err);
+    return adminChDeny('تعذّر التحقق من صلاحياتك، حاول تحديث الصفحة.');
+  }
+}
+
 async function adminChInit() {
   adminChBuildTypeOptions();
   await adminChLoad();
@@ -265,6 +280,8 @@ async function adminChInit() {
   document.getElementById('channelCancelEditBtn')?.addEventListener('click', adminChResetForm);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('channelForm')) adminChInit();
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!document.getElementById('channelForm')) return;
+  const allowed = await adminChCheckAccess();
+  if (allowed) adminChInit();
 });

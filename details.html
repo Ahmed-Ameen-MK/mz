@@ -8,7 +8,12 @@
 <link rel="icon" href="icon.png" type="image/png">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<!--
+  data-require-auth: نفس الحارس المستخدم في index.html جوه auth.js —
+  أي زائر بدون جلسة Supabase فعّالة يتحول تلقائيًا لصفحة auth/login.html
+  قبل ما يشوف تفاصيل المباراة/القناة.
+-->
+<body data-require-auth>
 
 <!-- Ticker -->
 <div class="ticker" aria-label="آخر الأخبار">

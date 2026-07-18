@@ -8,7 +8,7 @@
 // بدل تركه ظاهرًا في كود الواجهة الأمامية.
 // ===========================================================
 
-const MZ_API_KEY  = 'a9c4073aba9f76918ebd6bd6b801ea6c';
+const MZ_API_KEY  = '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';
 const MZ_API_BASE  = 'https://v3.football.api-sports.io';
 const MZ_TIMEZONE  = 'Africa/Cairo';
 

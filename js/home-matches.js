@@ -19,10 +19,21 @@ const HOME_HALFTIME_STATUSES  = ['HT'];
 const HOME_FINISHED_STATUSES  = ['FT', 'AET', 'PEN', 'AWD', 'WO'];
 const HOME_POSTPONED_STATUSES = ['PST', 'CANC', 'ABD'];
 
-// نفس أولويات الدوريات الكبرى المستخدمة في matches.html —
-// رقم أقل = أهم
+// نفس اللائحة النهائية المستخدمة في matches-api.js — أي بطولة مش هنا
+// (نسائي، ناشئين، دوريات ثانوية...) بتتفلتر ومتظهرش في "مباريات اليوم".
+// ⚠️ تأكد من أرقام 5 و6 و7 و301 عبر /leagues?search=... (راجع نفس
+// الملاحظة الموجودة في matches-api.js).
 const HOME_MAJOR_LEAGUES = {
-  1: 0, 2: 1, 4: 2, 9: 3, 39: 4, 140: 5, 135: 6, 78: 7, 61: 8, 307: 9, 233: 10,
+  1: 0,    // كاس العالم
+  39: 1,   // الدوري الإنجليزي الممتاز
+  140: 2,  // الدوري الإسباني الممتاز
+  78: 3,   // الدوري الألماني
+  307: 4,  // الدوري السعودي للمحترفين
+  301: 5,  // الدوري الإماراتي — تحقق من الرقم
+  233: 6,  // الدوري المصري الممتاز
+  5: 7,    // دوري الأمم الأوروبية — تحقق من الرقم
+  6: 8,    // كاس الأمم الأفريقية — تحقق من الرقم
+  7: 9,    // كاس آسيا — تحقق من الرقم
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,7 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.errors && Object.keys(data.errors).length) {
       throw new Error(Object.values(data.errors).join(' | '));
     }
-    return data.response || [];
+    // فلترة فورية: فقط البطولات الموجودة في HOME_MAJOR_LEAGUES
+    return (data.response || []).filter(
+      fx => HOME_MAJOR_LEAGUES[fx.league.id] !== undefined
+    );
   }
 
   /* ---------- helpers (نفس منطق matches-api.js) ---------- */
